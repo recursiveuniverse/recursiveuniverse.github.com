@@ -120,8 +120,7 @@ _.defaults exports, {Cell, Square}
 # * The [Future Module][future] provides methods for computing the future of a pattern, taking into account its ability to grow beyond
 # the size of its container square.
 # * The [Cache Module][cache] implements a very naive hash-table for canoncial representations of squares. HashLife uses extensive
-# [canonicalization][canonical] to optimize the storage of very large patterns with repetitive components. **New**: Garbage collection
-# allows Cafe au Life to compute the future of patterns with high entropy.
+# [canonicalization][canonical] to optimize the storage of very large patterns with repetitive components.
 # * The [Garbage Collection Module][gc] implements a simple reference-counting garbage collector for the cache. For more information,
 # read [Implementing Garbage Collection in CS/JS with Aspect-Oriented Programming][igc]
 # * The [API Module][api] provides methods for grabbing json or strings of patterns and resizing them to fit expectations.
@@ -158,6 +157,11 @@ require('./api').mixInto(exports)
 # [canonical]: https://en.wikipedia.org/wiki/Canonicalization
 # [rules]: http:rules.html
 # [gc]: http:gc.html
+
+# ## Todo List
+#
+# * TODO: Extract futures module so that it can run in naïve brute force mode without it
+# * TODO: Decouple canonicalization so that it can work with or without the cache module. If the cache and future modules are removed, it should only take advantage of repetition during the current iteration
 
 # ## Who
 #
