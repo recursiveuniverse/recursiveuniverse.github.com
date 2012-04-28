@@ -57,7 +57,7 @@ describe 'reference counting', ->
       [0, 0, 0, 0, 0, 0, 0, 0]
       [1, 0, 0, 0, 0, 0, 0, 0]
     ])
-    @parent = Life.Square.canonicalize
+    @parent = Life.Square.for
       nw: @a
       ne: @b
       se: @c
@@ -106,7 +106,7 @@ describe 'reference counting', ->
         [0, 0, 0, 0, 0, 0, 0, 0]
         [1, 0, 0, 0, 0, 0, 0, 1]
       ])
-      @wxyz = Life.Square.canonicalize
+      @wxyz = Life.Square.for
         nw: @w
         ne: @x
         se: @y
@@ -156,7 +156,7 @@ describe 'reference counting', ->
 
     it 'children with multiple parents should not get collected', ->
 
-      wwww = Life.Square.canonicalize
+      wwww = Life.Square.for
         nw: @w
         ne: @w
         se: @w
@@ -206,10 +206,10 @@ describe 'reference counting', ->
 
       expect( @a.has_one_reference() ).toBeTruthy()
       {nw, ne, se, sw} = @parent
-      Life.Square.canonicalize {nw, ne, se, sw}
-      Life.Square.canonicalize {nw, ne, se, sw}
-      Life.Square.canonicalize {nw, ne, se, sw}
-      pp = Life.Square.canonicalize {nw, ne, se, sw}
+      Life.Square.for {nw, ne, se, sw}
+      Life.Square.for {nw, ne, se, sw}
+      Life.Square.for {nw, ne, se, sw}
+      pp = Life.Square.for {nw, ne, se, sw}
       expect(pp).toEqual(@parent) # referencing the same thing
       expect(nw).toEqual(@a)
       expect( @a.has_one_reference() ).toBeTruthy()

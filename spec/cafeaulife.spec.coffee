@@ -74,19 +74,19 @@ describe 'cafe au life', ->
     describe 'non-trivial squares', ->
 
       beforeEach ->
-        @size_four_empties = Life.Square.canonicalize
+        @size_four_empties = Life.Square.for
           nw: @size_two_empties
           ne: @size_two_empties
           se: @size_two_empties
           sw: @size_two_empties
 
-        @size_four_fulls = Life.Square.canonicalize
+        @size_four_fulls = Life.Square.for
           nw: @size_two_fulls
           ne: @size_two_fulls
           se: @size_two_fulls
           sw: @size_two_fulls
 
-        @size_eight_empties = Life.Square.canonicalize
+        @size_eight_empties = Life.Square.for
           nw: @size_four_empties
           ne: @size_four_empties
           se: @size_four_empties

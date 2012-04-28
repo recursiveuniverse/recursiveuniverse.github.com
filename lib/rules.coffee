@@ -64,14 +64,18 @@ exports.mixInto = (exports) ->
       super(params)
       @result = _.memoize( =>
         a = @to_json()
-        Square.cache.find
+        Square.Smallest.for
           nw: Square.Seed.succ(a, 1,1)
           ne: Square.Seed.succ(a, 1,2)
           se: Square.Seed.succ(a, 2,2)
           sw: Square.Seed.succ(a, 2,1)
       )
+    @for: (quadrants) ->
+      Square.for(quadrants, Square.Seed)
 
   class Square.Smallest extends Square
+    @for: (quadrants) ->
+      Square.for(quadrants, Square.Smallest)
 
   _.defaults exports,
     set_universe_rules: (survival = [2,3], birth = [3]) ->
@@ -79,7 +83,7 @@ exports.mixInto = (exports) ->
       Cell.Alive ?= new Cell(1)
       Cell.Dead  ?= new Cell(0)
 
-      return exports if Square.cache.current_rules?.toString() is {survival, birth}.toString() and Square.cache.length >= 65552
+      return exports if Square.Seed.current_rules?.toString() is {survival, birth}.toString() # and Square.cache.length >= 65552
 
       rule = dfunc [
         (if birth.indexOf(x) >= 0 then Cell.Alive else Cell.Dead) for x in [0..9]
@@ -94,15 +98,13 @@ exports.mixInto = (exports) ->
           cells[row+1][col] + cells[row+1][col+1]
         rule(current_state, neighbour_count)
 
-      Square.cache.clear()
-
       # The canonical 2x2 squares are initialized from the cartesian product
       # of every possible cell. 2 possible cells to the power of 4 quadrants gives sixteen
       # possible 2x2 squares.
       #
       # 2x2 squares do not compute results
       all_2x2_squares = cartesian_product([Cell.Dead, Cell.Alive]).map (quadrants) ->
-        Square.cache.add new Square.Smallest(quadrants)
+        Square.Smallest.for(quadrants)
 
       # The canonical 4x4 squares are initialized from the cartesian product of
       # every possible 2x2 square. 16 possible 2x2 squares to the power of 4 quadrants
@@ -118,9 +120,9 @@ exports.mixInto = (exports) ->
       # combining the results of smaller squares, so therefore all such computations
       # will terminate when they reach a square of size 4x4.
       cartesian_product(all_2x2_squares).forEach (quadrants) ->
-        Square.cache.add new Square.Seed(quadrants)
+        Square.Seed.for(quadrants)
 
-      Square.cache.current_rules = {survival, birth}
+      Square.Seed.current_rules = {survival, birth}
 
       exports
 

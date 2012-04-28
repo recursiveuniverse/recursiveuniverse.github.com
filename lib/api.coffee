@@ -75,7 +75,7 @@ exports.mixInto = ({Square, Cell}) ->
           throw 'a 1x1 square must contain a zero, one, or Cell'
       else
         half_length = json.length / 2
-        Square.canonicalize
+        Square.for
           nw: @from_json(
             json.slice(0, half_length).map (row) ->
               row.slice(0, half_length)
@@ -113,7 +113,7 @@ exports.mixInto = ({Square, Cell}) ->
          @ne.nw.isEmpty() and @ne.ne.isEmpty() and @ne.se.isEmpty() and \
          @se.ne.isEmpty() and @se.se.isEmpty() and @se.sw.isEmpty() and \
          @sw.se.isEmpty() and @sw.sw.isEmpty() and @sw.nw.isEmpty()
-        Square.canonicalize
+        Square.for
           nw: @nw.se
           ne: @ne.sw
           se: @se.nw

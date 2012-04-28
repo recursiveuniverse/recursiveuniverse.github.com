@@ -44,6 +44,8 @@ exports.mixInto = ({Square, Cell}) ->
     .after 'initialize', ->
       @id = (counter += 1)
 
+  _for = Square.for
+
   _.extend Square,
 
     cache:
@@ -64,12 +66,15 @@ exports.mixInto = ({Square, Cell}) ->
         {nw, ne, se, sw} = square
         (@buckets[nw.level + 1] ||= {})["#{nw.id}-#{ne.id}-#{se.id}-#{sw.id}"] = square
 
-    canonicalize: (quadrants) ->
-      found = @cache.find(quadrants)
+    for: (quadrants, creator) ->
+      found = Square.cache.find(quadrants)
       if found
         found
       else
-        @cache.add(new Square.RecursivelyComputable(quadrants))
+        {nw, ne, se, sw} = quadrants
+        Square.cache.add _for.call(this, quadrants, creator)
+
+exports
 
 # ## The first time through
 #

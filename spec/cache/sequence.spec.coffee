@@ -71,12 +71,12 @@ describe 'Square.RecursivelyComputable', ->
       expect(
         Life.Square.RecursivelyComputable.take_the_canonicalized_values(@map_of_squares).foo
       ).toEqual(
-        Life.Square.canonicalize(@map_of_squares.foo)
+        Life.Square.for(@map_of_squares.foo)
       )
       expect(
         Life.Square.RecursivelyComputable.take_the_canonicalized_values(@map_of_squares).bar
       ).toEqual(
-        Life.Square.canonicalize(@map_of_squares.bar)
+        Life.Square.for(@map_of_squares.bar)
       )
 
   describe 'square_to_intermediate_map', ->

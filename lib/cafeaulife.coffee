@@ -54,66 +54,6 @@
 #
 # [hl]: http://en.wikipedia.org/wiki/Hashlife
 
-# ## How
-
-# Cafe au Life is based on two very simple classes:
-#
-# The smallest unit of Life is the `Cell`. The constructor is set up to call an `initialize` method to make point-cuts slightly easier.
-#
-# HashLife operates on square regions of the board, with the length of the side of each square being a natural power of two
-# (`2^1 -> 2`, `2^2 -> 4`, `2^3 -> 8`...). Naturally, squares are represented by instances of the class `Square`. The smallest possible square
-# (of size `2^1`) has cells for each of its four quadrants, while all larger squares (of size `2^n`) have squares of one smaller
-# size (`2^(n-1)`) for each of their four quadrants.
-#
-# For example, a square of size eight (`2^3`) is composed of four squares of size four (`2^2`):
-#
-#     nw         ne
-#       ....|....
-#       ....|....
-#       ....|....
-#       ....|....
-#       ————#————
-#       ....|....
-#       ....|....
-#       ....|....
-#       ....|....
-#     sw         se
-#
-# The squares of size four are in turn each composed of four squares of size two (`2^1`):
-#
-#     nw           ne
-#       ..|..|..|..
-#       ..|..|..|..
-#       ——+——|——+——
-#       ..|..|..|..
-#       ..|..|..|..
-#       —————#—————
-#       ..|..|..|..
-#       ..|..|..|..
-#       ——+——|——+——
-#       ..|..|..|..
-#       ..|..|..|..
-#     sw           se
-#
-# And those in turn are each composed of four cells, which cannot be subdivided. (For simplicity, a Cafe au Life
-# board is represented as one such large square, although the HashLife algorithm can be used to handle any board shape by tiling it with squares.)
-exports ?= window or this
-_ = require('underscore')
-
-class Cell
-  constructor: (@value) ->
-    @level = 0
-    @initialize.apply(this, arguments)
-  initialize: ->
-
-class Square
-  constructor: ({@nw, @ne, @se, @sw}) ->
-    @level = @nw.level + 1
-    @initialize.apply(this, arguments)
-  initialize: ->
-
-_.defaults exports, {Cell, Square}
-
 # Cafe au Life is divided into modules:
 #
 # * The [Rules Module][rules] provides a method for setting up the [rules][ll] of the Life universe.
@@ -138,11 +78,16 @@ _.defaults exports, {Cell, Square}
 # [ll]: http://www.conwaylife.com/wiki/Cellular_automaton#Well-known_Life-like_cellular_automata
 # [igc]: https://github.com/raganwald/homoiconic/blob/master/2012/03/garbage_collection_in_coffeescript.md
 
-require('./rules').mixInto(exports)
-require('./future').mixInto(exports)
-require('./cache').mixInto(exports)
-require('./gc').mixInto(exports)
-require('./api').mixInto(exports)
+_ = require('underscore')
+
+universe = require('./universe')
+require('./rules').mixInto(universe)
+require('./future').mixInto(universe)
+require('./cache').mixInto(universe)
+require('./gc').mixInto(universe)
+require('./api').mixInto(universe)
+
+_.defaults exports, universe
 
 # ## The first time through
 #
@@ -160,8 +105,13 @@ require('./api').mixInto(exports)
 
 # ## Todo List
 #
-# * TODO: Extract futures module so that it can run in naïve brute force mode without it
-# * TODO: Decouple canonicalization so that it can work with or without the cache module. If the cache and future modules are removed, it should only take advantage of repetition during the current iteration
+# TODO: Extract basic cell and square classes into quadtree or universe module so that while cafeaulife.coff imports everything, it's possible to mix and match modules as desired.
+#
+# TODO: Extract futures module so that it can run in naïve brute force mode without it
+#
+# TODO: Support changing the rules during a run.
+#
+# TODO: Decouple canonicalization so that it can work with or without the cache module. If the cache and future modules are removed, it should only take advantage of repetition during the current iteration
 
 # ## Who
 #

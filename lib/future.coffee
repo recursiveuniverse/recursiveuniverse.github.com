@@ -375,7 +375,7 @@ exports.mixInto = ({Square, Cell}) ->
 
     @take_the_canonicalized_values: @map_fn(
       (quadrants) ->
-        Square.canonicalize(quadrants)
+        Square.for(quadrants)
     )
 
     @take_the_results: @map_fn(
@@ -512,7 +512,7 @@ exports.mixInto = ({Square, Cell}) ->
 
     result:
       @memoize 'result', ->
-        Square.canonicalize(
+        Square.for(
           Square.RecursivelyComputable.sequence(
             Square.RecursivelyComputable.square_to_intermediate_map
             Square.RecursivelyComputable.take_the_canonicalized_values
@@ -538,13 +538,13 @@ exports.mixInto = ({Square, Cell}) ->
     result_at_time:
       @memoize 'result_at_time', (t) ->
         if t is 0
-          Square.canonicalize
+          Square.for
             nw: @nw.se
             ne: @ne.sw
             se: @se.nw
             sw: @sw.ne
         else if t <= Math.pow(2, @level - 3)
-          Square.canonicalize(
+          Square.for(
             Square.RecursivelyComputable.sequence(
               Square.RecursivelyComputable.square_to_intermediate_map
               Square.RecursivelyComputable.take_the_canonicalized_values
@@ -555,7 +555,7 @@ exports.mixInto = ({Square, Cell}) ->
             )(this)
           )
         else if Math.pow(2, @level - 3) < t < Math.pow(2, @level - 2)
-          Square.canonicalize(
+          Square.for(
             Square.RecursivelyComputable.sequence(
               Square.RecursivelyComputable.square_to_intermediate_map
               Square.RecursivelyComputable.take_the_canonicalized_values
@@ -572,7 +572,7 @@ exports.mixInto = ({Square, Cell}) ->
 
   Square.Seed::result_at_time = (t) ->
     if t is 0
-      Square.canonicalize
+      Square.for
         nw: @nw.se
         ne: @ne.sw
         se: @se.nw
@@ -600,7 +600,7 @@ exports.mixInto = ({Square, Cell}) ->
   _.extend Square.prototype,
     empty_copy: ->
       empty_quadrant = @nw.empty_copy()
-      Square.canonicalize
+      Square.for
         nw: empty_quadrant
         ne: empty_quadrant
         se: empty_quadrant
@@ -611,23 +611,23 @@ exports.mixInto = ({Square, Cell}) ->
         return this
       else
         empty_quadrant = @nw.empty_copy()
-        Square.canonicalize
-          nw: Square.canonicalize
+        Square.for
+          nw: Square.for
             nw: empty_quadrant
             ne: empty_quadrant
             se: @nw
             sw: empty_quadrant
-          ne: Square.canonicalize
+          ne: Square.for
             nw: empty_quadrant
             ne: empty_quadrant
             se: empty_quadrant
             sw: @ne
-          se: Square.canonicalize
+          se: Square.for
             nw: @se
             ne: empty_quadrant
             se: empty_quadrant
             sw: empty_quadrant
-          sw: Square.canonicalize
+          sw: Square.for
             nw: empty_quadrant
             ne: @sw
             se: empty_quadrant
@@ -644,6 +644,14 @@ exports.mixInto = ({Square, Cell}) ->
         new_level = Math.ceil(Math.log(new_size) / Math.log(2))
         base = @pad_by (new_level - @level + 1)
         base.result_at_time(t)
+
+  "The following must happen *before* caching. They can't be patched independently."
+
+  _for = Square.for
+
+  _.extend Square,
+    for: (quadrants, creator = Square.RecursivelyComputable) ->
+      _for(quadrants, creator)
 
 # ## The first time through
 #
