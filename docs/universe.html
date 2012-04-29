@@ -1,0 +1,111 @@
+<!DOCTYPE html>  <html> <head>   <title>universe.coffee</title>   <meta http-equiv="content-type" content="text/html; charset=UTF-8">   <link rel="stylesheet" media="all" href="docco.css" /> </head> <body>   <div id="container">     <div id="background"></div>            <div id="jump_to">         Jump To &hellip;         <div id="jump_wrapper">           <div id="jump_page">                                           <a class="source" href="api.html">                 api.coffee               </a>                                           <a class="source" href="cache.html">                 cache.coffee               </a>                                           <a class="source" href="cafeaulife.html">                 cafeaulife.coffee               </a>                                           <a class="source" href="future.html">                 future.coffee               </a>                                           <a class="source" href="gc.html">                 gc.coffee               </a>                                           <a class="source" href="menagerie.html">                 menagerie.coffee               </a>                                           <a class="source" href="universe.html">                 universe.coffee               </a>                        </div>         </div>       </div>          <table cellpadding="0" cellspacing="0">       <thead>         <tr>           <th class="docs">             <h1>               universe.coffee             </h1>           </th>           <th class="code">           </th>         </tr>       </thead>       <tbody>                               <tr id="section-1">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-1">&#182;</a>               </div>               <p>This module is part of <a href="http://recursiveuniver.se">resursiveuniver.se</a>.</p>
+
+<h2>Universe Module</h2>
+
+<p>The Universe Module provides the basic <code>Cell</code> and <code>Square</code> classes needed to
+represent the Life universe as a QuadTree. Every othere module depends on
+universe.coffee.</p>             </td>             <td class="code">               <div class="highlight"><pre></pre></div>             </td>           </tr>                               <tr id="section-2">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-2">&#182;</a>               </div>               <h3>The Life "Universe"</h3>
+
+<p>This module mixes special case functionality for computing the <code>future</code> of a square into <code>Square</code> and <code>Cell</code>.</p>             </td>             <td class="code">               <div class="highlight"><pre></pre></div>             </td>           </tr>                               <tr id="section-3">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-3">&#182;</a>               </div>               <h3>Baseline Setup</h3>             </td>             <td class="code">               <div class="highlight"><pre><span class="nv">_ = </span><span class="nx">require</span><span class="p">(</span><span class="s1">&#39;underscore&#39;</span><span class="p">)</span>
+<span class="nx">exports</span> <span class="o">?=</span> <span class="nb">window</span> <span class="o">or</span> <span class="k">this</span></pre></div>             </td>           </tr>                               <tr id="section-4">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-4">&#182;</a>               </div>               <p>Cafe au Life is based on two very simple classes:</p>
+
+<p>The smallest unit of Life is the <code>Cell</code>. The constructor is set up to call an <code>initialize</code> method to make point-cuts slightly easier.</p>             </td>             <td class="code">               <div class="highlight"><pre><span class="k">class</span> <span class="nx">Cell</span>
+  <span class="nv">constructor: </span><span class="nf">(@value) -&gt;</span>
+    <span class="vi">@level = </span><span class="mi">0</span>
+    <span class="nx">@initialize</span><span class="p">.</span><span class="nx">apply</span><span class="p">(</span><span class="k">this</span><span class="p">,</span> <span class="nx">arguments</span><span class="p">)</span>
+  <span class="nv">initialize: </span><span class="o">-&gt;</span></pre></div>             </td>           </tr>                               <tr id="section-5">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-5">&#182;</a>               </div>               <p>HashLife operates on square regions of the board, with the length of the side of each square being a natural power of two
+(<code>2^1 -&gt; 2</code>, <code>2^2 -&gt; 4</code>, <code>2^3 -&gt; 8</code>...). Naturally, squares are represented by instances of the class <code>Square</code>. The smallest possible square
+(of size <code>2^1</code>) has cells for each of its four quadrants, while all larger squares (of size <code>2^n</code>) have squares of one smaller
+size (<code>2^(n-1)</code>) for each of their four quadrants.</p>
+
+<p>For example, a square of size eight (<code>2^3</code>) is composed of four squares of size four (<code>2^2</code>):</p>
+
+<pre><code>nw         ne
+  ....|....
+  ....|....
+  ....|....
+  ....|....
+  ————#————
+  ....|....
+  ....|....
+  ....|....
+  ....|....
+sw         se
+</code></pre>
+
+<p>The squares of size four are in turn each composed of four squares of size two (<code>2^1</code>):</p>
+
+<pre><code>nw           ne
+  ..|..|..|..
+  ..|..|..|..
+  ——+——|——+——
+  ..|..|..|..
+  ..|..|..|..
+  —————#—————
+  ..|..|..|..
+  ..|..|..|..
+  ——+——|——+——
+  ..|..|..|..
+  ..|..|..|..
+sw           se
+</code></pre>
+
+<p>And those in turn are each composed of four cells, which cannot be subdivided. (For simplicity, a Cafe au Life
+board is represented as one such large square, although the HashLife algorithm can be used to handle any board shape by tiling it with squares.)</p>             </td>             <td class="code">               <div class="highlight"><pre><span class="k">class</span> <span class="nx">Square</span>
+  <span class="nv">constructor: </span><span class="nf">({@nw, @ne, @se, @sw}) -&gt;</span>
+    <span class="vi">@level = </span><span class="nx">@nw</span><span class="p">.</span><span class="nx">level</span> <span class="o">+</span> <span class="mi">1</span>
+    <span class="nx">@initialize</span><span class="p">.</span><span class="nx">apply</span><span class="p">(</span><span class="k">this</span><span class="p">,</span> <span class="nx">arguments</span><span class="p">)</span>
+  <span class="nv">initialize: </span><span class="o">-&gt;</span>
+  <span class="vi">@for: </span><span class="nf">(quadrants, creator = Square)-&gt;</span>
+    <span class="k">new</span> <span class="nx">creator</span><span class="p">(</span><span class="nx">quadrants</span><span class="p">)</span></pre></div>             </td>           </tr>                               <tr id="section-6">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-6">&#182;</a>               </div>               <h3>Setting the rules for this game's "Universe"</h3>
+
+<p>There many possible games consisting of cellular automata arranged in a two-dimensional
+matrix. Cafe au Life handles the "<a href="http://www.conwaylife.com/wiki/Cellular_automaton#Well-known_Life-like_cellular_automata">life-like</a>" ones, roughly those that have:</p>
+
+<ul>
+<li>A stable 'quiescent' state. A universe full of empty cells will stay empty.</li>
+<li>Rules based only on the population of a cell's Moore Neighborhood: Every cell is affected by the population of its eight neighbours,
+and all eight neighbours are treated identically.</li>
+<li>Two states.</li>
+</ul>
+
+<p>Given a definition of the state machine for each cell, Cafe au Life performs all the necessary initialization to compute
+the future of a pattern.</p>
+
+<p>The default, <code>set_universe_rules()</code>, is equivalent to <code>set_universe_rules([2,3],[3])</code>, which
+invokes Conway's Game of Life, commonly written as 23/3. Other games can be invoked with their survival
+and birth counts, e.g. <code>set_universe_rules([1,3,5,7], [1,3,5,7])</code> invokes <a href="http://www.conwaylife.com/wiki/Replicator_" title="CA">Replicator</a></p>             </td>             <td class="code">               <div class="highlight"><pre></pre></div>             </td>           </tr>                               <tr id="section-7">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-7">&#182;</a>               </div>               <p>First, here's a handy function for turning any array or object into a dictionary function.</p>
+
+<p>(see also: <a href="https://github.com/raganwald/homoiconic/blob/master/2012/01/reuseable-abstractions.md#readme">Reusable Abstractions in CoffeeScript</a>)</p>             </td>             <td class="code">               <div class="highlight"><pre><span class="nv">dfunc = </span><span class="nf">(dictionary) -&gt;</span>
+  <span class="nf">(indices...) -&gt;</span>
+    <span class="nx">indices</span><span class="p">.</span><span class="nx">reduce</span> <span class="nf">(a, i) -&gt;</span>
+      <span class="nx">a</span><span class="p">[</span><span class="nx">i</span><span class="p">]</span>
+    <span class="p">,</span> <span class="nx">dictionary</span></pre></div>             </td>           </tr>                               <tr id="section-8">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-8">&#182;</a>               </div>               <p>Next, a helper function that sets the rules for the current "game." Calling <code>set_universe_rules(...)</code> creates
+a <code>succ</code> function that answers the successor cell given a matrix of cells. It doesn't operate directly
+on squares or cells.</p>             </td>             <td class="code">               <div class="highlight"><pre><span class="nv">set_universe_rules = </span><span class="nf">(survival = [2,3], birth = [3]) -&gt;</span>
+
+  <span class="nx">Cell</span><span class="p">.</span><span class="nx">Alive</span> <span class="o">?=</span> <span class="k">new</span> <span class="nx">Cell</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+  <span class="nx">Cell</span><span class="p">.</span><span class="nx">Dead</span>  <span class="o">?=</span> <span class="k">new</span> <span class="nx">Cell</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+
+  <span class="k">return</span> <span class="nx">exports</span> <span class="k">if</span> <span class="nx">Square</span><span class="p">.</span><span class="nx">current_rules</span><span class="o">?</span><span class="p">.</span><span class="nx">toString</span><span class="p">()</span> <span class="o">is</span> <span class="p">{</span><span class="nx">survival</span><span class="p">,</span> <span class="nx">birth</span><span class="p">}.</span><span class="nx">toString</span><span class="p">()</span>
+
+  <span class="nv">Square.current_rules = </span><span class="p">{</span><span class="nx">survival</span><span class="p">,</span> <span class="nx">birth</span><span class="p">}</span>
+
+  <span class="nv">rule = </span><span class="nx">dfunc</span> <span class="p">[</span>
+    <span class="p">(</span><span class="k">if</span> <span class="nx">birth</span><span class="p">.</span><span class="nx">indexOf</span><span class="p">(</span><span class="nx">x</span><span class="p">)</span> <span class="o">&gt;=</span> <span class="mi">0</span> <span class="k">then</span> <span class="nx">Cell</span><span class="p">.</span><span class="nx">Alive</span> <span class="k">else</span> <span class="nx">Cell</span><span class="p">.</span><span class="nx">Dead</span><span class="p">)</span> <span class="k">for</span> <span class="nx">x</span> <span class="k">in</span> <span class="p">[</span><span class="mi">0</span><span class="p">..</span><span class="mi">9</span><span class="p">]</span>
+    <span class="p">(</span><span class="k">if</span> <span class="nx">survival</span><span class="p">.</span><span class="nx">indexOf</span><span class="p">(</span><span class="nx">x</span><span class="p">)</span> <span class="o">&gt;=</span> <span class="mi">0</span> <span class="k">then</span> <span class="nx">Cell</span><span class="p">.</span><span class="nx">Alive</span> <span class="k">else</span> <span class="nx">Cell</span><span class="p">.</span><span class="nx">Dead</span><span class="p">)</span> <span class="k">for</span> <span class="nx">x</span> <span class="k">in</span> <span class="p">[</span><span class="mi">0</span><span class="p">..</span><span class="mi">9</span><span class="p">]</span>
+  <span class="p">]</span>
+
+  <span class="nv">Square.succ = </span><span class="nf">(cells, row, col) -&gt;</span>
+    <span class="nv">current_state = </span><span class="nx">cells</span><span class="p">[</span><span class="nx">row</span><span class="p">][</span><span class="nx">col</span><span class="p">]</span>
+    <span class="nv">neighbour_count = </span><span class="nx">cells</span><span class="p">[</span><span class="nx">row</span><span class="o">-</span><span class="mi">1</span><span class="p">][</span><span class="nx">col</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="nx">cells</span><span class="p">[</span><span class="nx">row</span><span class="o">-</span><span class="mi">1</span><span class="p">][</span><span class="nx">col</span><span class="p">]</span> <span class="o">+</span>
+      <span class="nx">cells</span><span class="p">[</span><span class="nx">row</span><span class="o">-</span><span class="mi">1</span><span class="p">][</span><span class="nx">col</span><span class="o">+</span><span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="nx">cells</span><span class="p">[</span><span class="nx">row</span><span class="p">][</span><span class="nx">col</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">+</span>
+      <span class="nx">cells</span><span class="p">[</span><span class="nx">row</span><span class="p">][</span><span class="nx">col</span><span class="o">+</span><span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="nx">cells</span><span class="p">[</span><span class="nx">row</span><span class="o">+</span><span class="mi">1</span><span class="p">][</span><span class="nx">col</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">+</span>
+      <span class="nx">cells</span><span class="p">[</span><span class="nx">row</span><span class="o">+</span><span class="mi">1</span><span class="p">][</span><span class="nx">col</span><span class="p">]</span> <span class="o">+</span> <span class="nx">cells</span><span class="p">[</span><span class="nx">row</span><span class="o">+</span><span class="mi">1</span><span class="p">][</span><span class="nx">col</span><span class="o">+</span><span class="mi">1</span><span class="p">]</span>
+    <span class="nx">rule</span><span class="p">(</span><span class="nx">current_state</span><span class="p">,</span> <span class="nx">neighbour_count</span><span class="p">)</span>
+
+  <span class="nx">exports</span>
+
+<span class="nx">_</span><span class="p">.</span><span class="nx">defaults</span> <span class="nx">exports</span><span class="p">,</span> <span class="p">{</span><span class="nx">Cell</span><span class="p">,</span> <span class="nx">Square</span><span class="p">,</span> <span class="nx">set_universe_rules</span><span class="p">}</span>
+
+</pre></div>             </td>           </tr>                </tbody>     </table>   </div> </body> </html> 

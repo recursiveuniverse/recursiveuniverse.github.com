@@ -226,7 +226,7 @@ describe 'cafe au life', ->
     describe 'to_json', ->
 
       beforeEach ->
-        @square_1 = Life.Square.cache.find
+        @square_1 = Life.Square.for
           nw: Life.Cell.Alive
           ne: Life.Cell.Alive
           se: Life.Cell.Dead

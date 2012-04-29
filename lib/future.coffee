@@ -15,6 +15,26 @@ exports ?= window or this
 
 exports.mixInto = ({Square, Cell}) ->
 
+  # A Seed knows how to calculate its own result from
+  # the rules
+  class Square.Seed extends Square
+    constructor: (params) ->
+      super(params)
+      @result = _.memoize( =>
+        a = @to_json()
+        Square.Smallest.for
+          nw: Square.succ(a, 1,1)
+          ne: Square.succ(a, 1,2)
+          se: Square.succ(a, 2,2)
+          sw: Square.succ(a, 2,1)
+      )
+    @for: (quadrants) ->
+      Square.for(quadrants, Square.Seed)
+
+  class Square.Smallest extends Square
+    @for: (quadrants) ->
+      Square.for(quadrants, Square.Smallest)
+
   # ### Recap: Squares
   #
   # ![Block laying seed](block_laying_seed.png)
@@ -650,8 +670,17 @@ exports.mixInto = ({Square, Cell}) ->
   _for = Square.for
 
   _.extend Square,
-    for: (quadrants, creator = Square.RecursivelyComputable) ->
-      _for(quadrants, creator)
+    for: (quadrants, creator) ->
+      if creator?
+        _for(quadrants, creator)
+      else
+        lev = quadrants.nw.level
+        if lev is 0
+          _for(quadrants, Square.Smallest)
+        else if lev is 1
+          _for(quadrants, Square.Seed)
+        else
+          _for(quadrants, Square.RecursivelyComputable)
 
 # ## The first time through
 #

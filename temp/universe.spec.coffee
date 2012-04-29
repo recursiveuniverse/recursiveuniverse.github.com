@@ -1,13 +1,5 @@
 require 'UnderscoreMatchersForJasmine'
 
-# Life = require('../lib/universe')
-#
-# require('../lib/rules').mixInto(Life)
-# require('../lib/cache').mixInto(Life)
-# require('../lib/future').mixInto(Life)
-# require('../lib/gc').mixInto(Life)
-# require('../lib/api').mixInto(Life)
-
 Life = require('../lib/cafeaulife').set_universe_rules()
 
 describe 'Cell and Square', ->

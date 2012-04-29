@@ -81,7 +81,6 @@
 _ = require('underscore')
 
 universe = require('./universe')
-require('./rules').mixInto(universe)
 require('./future').mixInto(universe)
 require('./cache').mixInto(universe)
 require('./gc').mixInto(universe)
