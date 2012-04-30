@@ -59,7 +59,7 @@
 # * The [Rules Module][rules] provides a method for setting up the [rules][ll] of the Life universe.
 # * The [Future Module][future] provides methods for computing the future of a pattern, taking into account its ability to grow beyond
 # the size of its container square.
-# * The [Cache Module][cache] implements a very naive hash-table for canoncial representations of squares. HashLife uses extensive
+# * The [Canonicalization Module][canonicalization] implements a very naive hash-table for canoncial representations of squares. HashLife uses extensive
 # [canonicalization][canonical] to optimize the storage of very large patterns with repetitive components.
 # * The [Garbage Collection Module][gc] implements a simple reference-counting garbage collector for the cache. For more information,
 # read [Implementing Garbage Collection in CS/JS with Aspect-Oriented Programming][igc]
@@ -71,7 +71,7 @@
 # [menagerie]: http:menagerie.html
 # [api]: http:api.html
 # [future]: http:future.html
-# [cache]: http:cache.html
+# [canonicalization]: http:canonicalization.html
 # [canonical]: https://en.wikipedia.org/wiki/Canonicalization
 # [rules]: http:rules.html
 # [gc]: http:gc.html
@@ -82,7 +82,7 @@ _ = require('underscore')
 
 universe = require('./universe')
 require('./future').mixInto(universe)
-require('./cache').mixInto(universe)
+require('./canonicalization').mixInto(universe)
 require('./gc').mixInto(universe)
 require('./api').mixInto(universe)
 
@@ -91,26 +91,30 @@ _.defaults exports, universe
 # ## The first time through
 #
 # If this is your first time through the code, start with the [Rules Module][rules], and then read the [Future Module][future]
-# to understand the core algorithm for computing the future of a pattern. You can look at the [Cache][cache], [Garbage Collection][gc],
+# to understand the core algorithm for computing the future of a pattern. You can look at the [canonicalization][canonicalization], [Garbage Collection][gc],
 # and [API][api] modules at your leisure.
 #
 # [menagerie]: http:menagerie.html
 # [api]: http:api.html
 # [future]: http:future.html
-# [cache]: http:cache.html
+# [canonicalization]: http:canonicalization.html
 # [canonical]: https://en.wikipedia.org/wiki/Canonicalization
 # [rules]: http:rules.html
 # [gc]: http:gc.html
 
 # ## Todo List
 #
-# TODO: Extract basic cell and square classes into quadtree or universe module so that while cafeaulife.coff imports everything, it's possible to mix and match modules as desired.
 #
-# TODO: Extract futures module so that it can run in naïve brute force mode without it
+# TODO: Extract futures module so that it can run in naïve brute force mode without it. This means finding a way to generalize '.succ'.
+#       With the future module removed, it should still use a quadtree, but not cache results and notlook more than one generation into the future.
+#       The quadtree is then simply a space-saving measure.
 #
-# TODO: Support changing the rules during a run.
+# TODO: ALlow futures, but move *memoization* of futures into its own module.
 #
-# TODO: Decouple canonicalization so that it can work with or without the cache module. If the cache and future modules are removed, it should only take advantage of repetition during the current iteration
+# TODO: Support changing the rules during a run. The Canonicalization Module will ahve to regenerate the cache.
+#
+# TODO: Decouple canonicalization so that it can work with or without the Canonicalization Module. If the Canonicalization Module is removed, it should work VERY slowly.
+
 
 # ## Who
 #

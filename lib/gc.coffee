@@ -3,9 +3,9 @@
 # ## Garbage Collection Module
 #
 # HashLife uses extensive [canonicalization][canonical] to optimize the storage of very large patterns with repetitive
-# components. The Cache Module implementss a very naive hash-table for canoncial representations of squares.
+# components. The Canonicalization Module implementss a very naive hash-table for canoncial representations of squares.
 #
-# [cache]: http:cache.html
+# [canonicalization]: http:canonicalization.html
 # [canonical]: https://en.wikipedia.org/wiki/Canonicalization
 
 # ### Canoncialization: The "Hash" in HashLife
@@ -230,13 +230,13 @@ exports.mixInto = ({Square, Cell}) ->
 
 # ## The first time through
 #
-# If this is your first time through the code, and you've already read the [Rules][rules], [Future][future], and [Cache][cache]
+# If this is your first time through the code, and you've already read the [Rules][rules], [Future][future], and [canonicalization][canonicalization]
 # modules, you can look at the [API][api] module next.
 #
 # [menagerie]: http:menagerie.html
 # [api]: http:api.html
 # [future]: http:future.html
-# [cache]: http:cache.html
+# [canonicalization]: http:canonicalization.html
 # [canonical]: https://en.wikipedia.org/wiki/Canonicalization
 # [rules]: http:rules.html
 # [gc]: http:gc.html

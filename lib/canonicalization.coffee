@@ -1,11 +1,11 @@
 # This module is part of [recursiveuniver.se](http://recursiveuniver.se).
 #
-# ## Cache Module
+# ## Canonicalization Module
 #
 # HashLife uses extensive [canonicalization][canonical] to optimize the storage of very large patterns with repetitive
-# components. The Cache Module implements a very naive hash-table for canoncial representations of squares.
+# components. The Canonicalization Module implements a very naive hash-table for canoncial representations of squares.
 #
-# [cache]: http:cache.html
+# [canonicalization]: http:canonicalization.html
 # [canonical]: https://en.wikipedia.org/wiki/Canonicalization
 
 # ### Canoncialization: The "Hash" in HashLife
@@ -84,7 +84,7 @@ exports
 # [menagerie]: http:menagerie.html
 # [api]: http:api.html
 # [future]: http:future.html
-# [cache]: http:cache.html
+# [canonicalization]: http:canonicalization.html
 # [canonical]: https://en.wikipedia.org/wiki/Canonicalization
 # [rules]: http:rules.html
 # [gc]: http:gc.html
