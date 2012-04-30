@@ -11,42 +11,41 @@ exports ?= window or this
 
 exports.mixInto = ({Square, Cell}) ->
 
-# ### Mix functionality in. `to_json` and `toString` are simple methods for cells, but
-# memoized for squares.
+  # ### Extracting matrices and strings from Cells and Squares
+
   _.extend Cell.prototype,
     to_json: ->
       [@value]
     toString: ->
       '' + @value
 
-  YouAreDaChef(Square)
-    .after 'initialize', ->
-      @to_json = _.memoize( ->
-        a =
-          nw: @nw.to_json()
-          ne: @ne.to_json()
-          se: @se.to_json()
-          sw: @sw.to_json()
-        b =
-          top: _.map( _.zip(a.nw, a.ne), ([left, right]) ->
-            if _.isArray(left)
-              left.concat(right)
-            else
-              [left, right]
-          )
-          bottom: _.map( _.zip(a.sw, a.se), ([left, right]) ->
-            if _.isArray(left)
-              left.concat(right)
-            else
-              [left, right]
-          )
-        b.top.concat(b.bottom)
-      )
-      @toString = _.memoize( ->
-        (_.map @to_json(), (row) ->
-          ([' ', '*'][c] for c in row).join('')
-        ).join('\n')
-      )
+  _.extend Square.prototype,
+    to_json: ->
+      a =
+        nw: @nw.to_json()
+        ne: @ne.to_json()
+        se: @se.to_json()
+        sw: @sw.to_json()
+      b =
+        top: _.map( _.zip(a.nw, a.ne), ([left, right]) ->
+          if _.isArray(left)
+            left.concat(right)
+          else
+            [left, right]
+        )
+        bottom: _.map( _.zip(a.sw, a.se), ([left, right]) ->
+          if _.isArray(left)
+            left.concat(right)
+          else
+            [left, right]
+        )
+      b.top.concat(b.bottom)
+    toString: ->
+      (_.map @to_json(), (row) ->
+        ([' ', '*'][c] for c in row).join('')
+      ).join('\n')
+
+  # ### Constructing squares from matrices and strings
 
   _.extend Square,
     from_string: (str) ->

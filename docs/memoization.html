@@ -1,0 +1,44 @@
+<!DOCTYPE html>  <html> <head>   <title>memoization.coffee</title>   <meta http-equiv="content-type" content="text/html; charset=UTF-8">   <link rel="stylesheet" media="all" href="docco.css" /> </head> <body>   <div id="container">     <div id="background"></div>            <div id="jump_to">         Jump To &hellip;         <div id="jump_wrapper">           <div id="jump_page">                                           <a class="source" href="api.html">                 api.coffee               </a>                                           <a class="source" href="cafeaulife.html">                 cafeaulife.coffee               </a>                                           <a class="source" href="canonicalization.html">                 canonicalization.coffee               </a>                                           <a class="source" href="future.html">                 future.coffee               </a>                                           <a class="source" href="gc.html">                 gc.coffee               </a>                                           <a class="source" href="memoization.html">                 memoization.coffee               </a>                                           <a class="source" href="menagerie.html">                 menagerie.coffee               </a>                                           <a class="source" href="universe.html">                 universe.coffee               </a>                        </div>         </div>       </div>          <table cellpadding="0" cellspacing="0">       <thead>         <tr>           <th class="docs">             <h1>               memoization.coffee             </h1>           </th>           <th class="code">           </th>         </tr>       </thead>       <tbody>                               <tr id="section-1">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-1">&#182;</a>               </div>               <p>This module is part of <a href="http://recursiveuniver.se">recursiveuniver.se</a>.</p>
+
+<h2>Basic Memoization Module</h2>
+
+<p>The Future Module provides methods for computing the future of a pattern, taking into account its ability to grow beyond
+the size of its container square.</p>             </td>             <td class="code">               <div class="highlight"><pre></pre></div>             </td>           </tr>                               <tr id="section-2">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-2">&#182;</a>               </div>               <h3>The Life "Universe"</h3>
+
+<p>The memoizing is a little more bespoke than you would usually see. Normally,
+you would use something like;</p>
+
+<p>@some<em>memoized</em>method = <em>.memoize( ->
+    "method</em>body<em>goes</em>here"
+  )</p>
+
+<p>However, rolling our own memoize infrastructure allows us to construct
+the <code>children</code> method that shows us which squares are logically related to any given
+square, by dint of being its quadrants or result at any time in the future</p>             </td>             <td class="code">               <div class="highlight"><pre></pre></div>             </td>           </tr>                               <tr id="section-3">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-3">&#182;</a>               </div>               <h3>Baseline Setup</h3>             </td>             <td class="code">               <div class="highlight"><pre></pre></div>             </td>           </tr>                               <tr id="section-4">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-4">&#182;</a>               </div>               <h3>Baseline Setup</h3>             </td>             <td class="code">               <div class="highlight"><pre><span class="nv">_ = </span><span class="nx">require</span><span class="p">(</span><span class="s1">&#39;underscore&#39;</span><span class="p">)</span>
+<span class="nv">YouAreDaChef = </span><span class="nx">require</span><span class="p">(</span><span class="s1">&#39;YouAreDaChef&#39;</span><span class="p">).</span><span class="nx">YouAreDaChef</span>
+<span class="nx">exports</span> <span class="o">?=</span> <span class="nb">window</span> <span class="o">or</span> <span class="k">this</span>
+
+<span class="nv">exports.mixInto = </span><span class="nf">({Square, Cell}) -&gt;</span>
+
+  <span class="nx">YouAreDaChef</span><span class="p">(</span><span class="nx">Square</span><span class="p">)</span>
+    <span class="p">.</span><span class="nx">after</span> <span class="s1">&#39;initialize&#39;</span><span class="p">,</span> <span class="o">-&gt;</span>
+      <span class="vi">@memoized = </span><span class="p">{}</span>
+
+  <span class="nv">Square::get_memo = </span><span class="nf">(index) -&gt;</span>
+    <span class="nx">@memoized</span><span class="p">[</span><span class="nx">index</span><span class="p">]</span>
+
+  <span class="nv">Square::set_memo = </span><span class="nf">(index, square) -&gt;</span>
+    <span class="nx">@memoized</span><span class="p">[</span><span class="nx">index</span><span class="p">]</span> <span class="o">=</span> <span class="nx">square</span>
+
+  <span class="nv">memoize = </span><span class="nf">(clazz, names...) -&gt;</span>
+    <span class="k">for</span> <span class="nx">name</span> <span class="k">in</span> <span class="nx">names</span>
+      <span class="nx">do</span> <span class="nf">(name) -&gt;</span>
+        <span class="nv">method_body = </span><span class="nx">clazz</span><span class="p">.</span><span class="nx">prototype</span><span class="p">[</span><span class="nx">name</span><span class="p">]</span>
+        <span class="nx">clazz</span><span class="p">.</span><span class="nx">prototype</span><span class="p">[</span><span class="nx">name</span><span class="p">]</span> <span class="o">=</span> <span class="nf">(args...) -&gt;</span>
+          <span class="nv">index = </span><span class="nx">name</span> <span class="o">+</span> <span class="nx">_</span><span class="p">.</span><span class="nx">map</span><span class="p">(</span> <span class="nx">args</span><span class="p">,</span> <span class="nf">(arg) -&gt;</span> <span class="s2">&quot;_#{arg}&quot;</span> <span class="p">).</span><span class="nx">join</span><span class="p">(</span><span class="s1">&#39;&#39;</span><span class="p">)</span>
+          <span class="nx">@get_memo</span><span class="p">(</span><span class="nx">index</span><span class="p">)</span> <span class="o">or</span> <span class="nx">@set_memo</span><span class="p">(</span><span class="nx">index</span><span class="p">,</span> <span class="nx">method_body</span><span class="p">.</span><span class="nx">call</span><span class="p">(</span><span class="k">this</span><span class="p">,</span> <span class="nx">args</span><span class="p">...))</span>
+
+  <span class="nx">memoize</span> <span class="nx">Square</span><span class="p">.</span><span class="nx">Seed</span><span class="p">,</span> <span class="s1">&#39;result&#39;</span>
+  <span class="nx">memoize</span> <span class="nx">Square</span><span class="p">.</span><span class="nx">RecursivelyComputable</span><span class="p">,</span> <span class="s1">&#39;result&#39;</span><span class="p">,</span> <span class="s1">&#39;result_at_time&#39;</span>
+
+</pre></div>             </td>           </tr>                </tbody>     </table>   </div> </body> </html> 

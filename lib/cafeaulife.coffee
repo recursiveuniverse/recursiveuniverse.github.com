@@ -83,6 +83,7 @@ _ = require('underscore')
 universe = require('./universe')
 require('./future').mixInto(universe)
 require('./canonicalization').mixInto(universe)
+require('./memoization').mixInto(universe)
 require('./gc').mixInto(universe)
 require('./api').mixInto(universe)
 
@@ -109,7 +110,7 @@ _.defaults exports, universe
 #       With the future module removed, it should still use a quadtree, but not cache results and notlook more than one generation into the future.
 #       The quadtree is then simply a space-saving measure.
 #
-# TODO: ALlow futures, but move *memoization* of futures into its own module.
+# TODO: Allow futures, but move *memoization* of futures into its own module.
 #
 # TODO: Support changing the rules during a run. The Canonicalization Module will ahve to regenerate the cache.
 #
