@@ -81,6 +81,7 @@
 # [canonical]: https://en.wikipedia.org/wiki/Canonicalization
 # [rules]: http:rules.html
 # [gc]: http:gc.html
+# [universe]: http:universe.html
 # [ll]: http://www.conwaylife.com/wiki/Cellular_automaton#Well-known_Life-like_cellular_automata
 # [igc]: https://github.com/raganwald/homoiconic/blob/master/2012/03/garbage_collection_in_coffeescript.md
 
