@@ -15,7 +15,7 @@ exports.mixInto = ({Square, Cell}) ->
 
   _.extend Cell.prototype,
     to_json: ->
-      [@value]
+      [[@value]]
     toString: ->
       '' + @value
 
@@ -47,12 +47,29 @@ exports.mixInto = ({Square, Cell}) ->
 
   # ### Constructing squares from matrices and strings
 
+  throw 'Wanted alive or dead' unless Cell.Alive? and Cell.Dead?
+
+  _.extend Cell,
+    from_json: (json) ->
+      throw 'Unh?' unless Cell.Alive.value is 1 and Cell.Dead.value is 0
+      if json.length is 1
+        if json[0][0] instanceof Cell
+          json[0][0]
+        else if json[0][0] is 0
+          Cell.Dead
+        else if json[0][0] is 1
+          Cell.Alive
+        else
+          throw 'a 1x1 square must contain a zero, one, or Cell'
+      else
+        throw 'cannot handle larger squares'
+
   _.extend Square,
     from_string: (str) ->
       strs = str.split('\n')
       json = _.map strs, (ln) ->
         {'.': 0, ' ': 0, 'O': 1, '+': 1, '*': 1}[c] for c in ln
-      @from_json(json)
+      Square.from_json(json)
     from_json: (json) ->
       dims = [json.length].concat json.map( (row) -> row.length )
       sz = Math.pow(2, Math.ceil(Math.log(Math.max(dims...)) / Math.log(2)))
@@ -64,30 +81,23 @@ exports.mixInto = ({Square, Cell}) ->
           _.map [1..sz], -> 0
         )
       if json.length is 1
-        if json[0][0] instanceof Cell
-          json[0][0]
-        else if json[0][0] is 0
-          Cell.Dead
-        else if json[0][0] is 1
-          Cell.Alive
-        else
-          throw 'a 1x1 square must contain a zero, one, or Cell'
+        Cell.from_json(json)
       else
         half_length = json.length / 2
         Square.for
-          nw: @from_json(
+          nw: Square.from_json(
             json.slice(0, half_length).map (row) ->
               row.slice(0, half_length)
           )
-          ne: @from_json(
+          ne: Square.from_json(
             json.slice(0, half_length).map (row) ->
               row.slice(half_length)
           )
-          se: @from_json(
+          se: Square.from_json(
             json.slice(half_length).map (row) ->
               row.slice(half_length)
           )
-          sw: @from_json(
+          sw: Square.from_json(
             json.slice(half_length).map (row) ->
               row.slice(0, half_length)
           )
@@ -122,9 +132,8 @@ exports.mixInto = ({Square, Cell}) ->
         this
 
   # ### Querying squares
-  YouAreDaChef(Cell)
-    .after 'initialize', ->
-      @population = @value
+  Cell.Dead.population = 0
+  Cell.Alive.population = 1
 
   YouAreDaChef(Square)
     .after 'initialize', ->

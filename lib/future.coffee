@@ -16,21 +16,17 @@ exports ?= window or this
 exports.mixInto = ({Square, Cell}) ->
 
   class Square.Smallest extends Square
-    @for: (quadrants) ->
-      Square.for(quadrants, Square.Smallest)
 
   # A Seed knows how to calculate its own result from
   # the rules
   class Square.Seed extends Square
     result: ->
       a = @to_json()
-      Square.Smallest.for
+      Square.for
         nw: Square.succ(a, 1,1)
         ne: Square.succ(a, 1,2)
         se: Square.succ(a, 2,2)
         sw: Square.succ(a, 2,1)
-    @for: (quadrants) ->
-      Square.for(quadrants, Square.Seed)
 
   # ### Recap: Squares
   #

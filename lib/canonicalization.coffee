@@ -34,21 +34,20 @@ exports ?= window or this
 # largest squares that aren't in use.
 exports.mixInto = ({Square, Cell}) ->
 
-  counter = 0
-
-  YouAreDaChef(Cell)
-    .after 'initialize', ->
-      @id = (counter += 1)
+  counter = 1 # Cell.Alive.value
 
   YouAreDaChef(Square)
     .after 'initialize', ->
-      @id = (counter += 1)
+      @value = (counter += 1)
 
   _for = Square.for
 
   _.extend Square,
 
     cache:
+
+      cache_key: ({nw, ne, se, sw}) ->
+        "#{nw.value}-#{ne.value}-#{se.value}-#{sw.value}"
 
       buckets: []
 
@@ -57,14 +56,18 @@ exports.mixInto = ({Square, Cell}) ->
 
       length: 0
 
-      find: ({nw, ne, se, sw}) ->
+      size: ->
+        _.reduce @buckets, ((acc, bucket) -> acc + _.keys(bucket).length), 0
+
+      find: (square) ->
+        {nw, ne, se, sw} = square
         console.trace() unless nw?.level?
-        (@buckets[nw.level + 1] ||= {})["#{nw.id}-#{ne.id}-#{se.id}-#{sw.id}"]
+        (@buckets[nw.level + 1] ||= {})[@cache_key(square)]
 
       add: (square) ->
         @length += 1
         {nw, ne, se, sw} = square
-        (@buckets[nw.level + 1] ||= {})["#{nw.id}-#{ne.id}-#{se.id}-#{sw.id}"] = square
+        (@buckets[nw.level + 1] ||= {})[@cache_key(square)] = square
 
     for: (quadrants, creator) ->
       found = Square.cache.find(quadrants)
@@ -72,7 +75,7 @@ exports.mixInto = ({Square, Cell}) ->
         found
       else
         {nw, ne, se, sw} = quadrants
-        Square.cache.add _for.call(this, quadrants, creator)
+        Square.cache.add _for(quadrants, creator)
 
 exports
 

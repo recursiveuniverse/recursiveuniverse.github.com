@@ -55,7 +55,7 @@ exports.mixInto = ({Square, Cell}) ->
 
     remove: (square) ->
       @length -= 1
-      delete (@buckets[square.nw.level + 1] ||= {})["#{square.nw.id}-#{square.ne.id}-#{square.se.id}-#{square.sw.id}"]
+      delete (@buckets[square.level])[@cache_key(square)]
       square
 
   _.extend Cell.prototype,
@@ -114,9 +114,11 @@ exports.mixInto = ({Square, Cell}) ->
   #
   # We take advantage of the way `Square.RecursivelyComputable` is factored to introduce reference
   # counting and add methods to remove a recursively computable square from the cache.
-  YouAreDaChef(Square.RecursivelyComputable)
+  YouAreDaChef(Square)
     .after 'initialize', ->
       @references = 0
+
+  YouAreDaChef(Square.RecursivelyComputable)
     .before 'set_memo', (index) ->
       if (existing = @get_memo(index))
         existing.decrementReference()
@@ -136,7 +138,7 @@ exports.mixInto = ({Square, Cell}) ->
       throw "incrementReference!? #{@references}" unless @references >= 0
       @references += 1
       this
-    decrementReference: () ->
+    decrementReference: ->
       throw "decrementReference!?" unless @references > 0
       @references -= 1
       this

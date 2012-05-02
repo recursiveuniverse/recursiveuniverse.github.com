@@ -24,6 +24,10 @@ class Cell
     @initialize.apply(this, arguments)
   initialize: ->
 
+_.defaults Cell,
+  Alive: new Cell(1)
+  Dead:  new Cell(0)
+
 # HashLife operates on square regions of the board, with the length of the side of each square being a natural power of two
 # (`2^1 -> 2`, `2^2 -> 4`, `2^3 -> 8`...). Naturally, squares are represented by instances of the class `Square`. The smallest possible square
 # (of size `2^1`) has cells for each of its four quadrants, while all larger squares (of size `2^n`) have squares of one smaller
@@ -67,7 +71,7 @@ class Square
     @level = @nw.level + 1
     @initialize.apply(this, arguments)
   initialize: ->
-  @for: (quadrants, creator = Square)->
+  @for: (quadrants, creator = Square) ->
     new creator(quadrants)
 
 # ### Setting the rules for this game's "Universe"
@@ -108,9 +112,6 @@ dfunc = (dictionary) ->
 # on squares or cells.
 
 set_universe_rules = (survival = [2,3], birth = [3]) ->
-
-  Cell.Alive ?= new Cell(1)
-  Cell.Dead  ?= new Cell(0)
 
   return exports if Square.current_rules?.toString() is {survival, birth}.toString()
 

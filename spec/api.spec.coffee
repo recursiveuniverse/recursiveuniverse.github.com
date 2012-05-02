@@ -5,6 +5,16 @@ Life = require('../lib/cafeaulife').set_universe_rules()
 
 describe 'from_json', ->
 
+  describe 'cells', ->
+
+    it 'should get cells from json', ->
+      expect(Life.Cell.from_json([[0]])).toEqual(Life.Cell.Dead)
+      expect(Life.Cell.from_json([[1]])).toEqual(Life.Cell.Alive)
+
+    it 'should translate cells to json', ->
+      expect(Life.Cell.Dead.to_json()).toEqual([[0]])
+      expect(Life.Cell.Alive.to_json()).toEqual([[1]])
+
   describe 'squares', ->
 
     it 'should accept rectangles', ->
@@ -34,7 +44,45 @@ describe 'from_json', ->
         ...O....
       ''' ).toBeA(Life.Square)
 
-  describe 'cells', ->
+  describe 'round trips', ->
+
+    it 'should round-trip 2x2 squares', ->
+
+      source = Life.Square.from_json([
+        [0, 1]
+        [1, 0]
+      ])
+
+      expect( source.nw ).toEqual( Life.Cell.Dead, 'NOT DEAD' )
+      expect( source.ne ).toEqual( Life.Cell.Alive, 'NOT ALIVE' )
+      expect( source.se ).toEqual( Life.Cell.Dead, 'NOT DEAD' )
+      expect( source.sw ).toEqual( Life.Cell.Alive, 'NOT ALIVE' )
+
+      expect( source.ne.to_json() ).toEqual( [[1]] )
+
+      expect( Life.Square.from_json([
+        [0, 1]
+        [1, 0]
+      ]).to_json() ).toEqual([
+        [0, 1]
+        [1, 0]
+      ])
+
+    it 'should round trip 4x4 squares', ->
+
+      expect( Life.Square.from_json([
+        [0, 0, 0, 1]
+        [0, 0, 1, 0]
+        [0, 1, 0, 0]
+        [1, 0, 0, 0]
+      ]).to_json() ).toEqual([
+        [0, 0, 0, 1]
+        [0, 0, 1, 0]
+        [0, 1, 0, 0]
+        [1, 0, 0, 0]
+      ])
+
+  describe 'from_json', ->
 
     it 'should handle ones and zeroes', ->
 
