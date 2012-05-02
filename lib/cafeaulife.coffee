@@ -63,8 +63,8 @@
 # * The [Canonicalization Module][canonicalization] implements a very naive hash-table for canoncial representations of squares. HashLife uses extensive
 # [canonicalization][canonical] to optimize the storage of very large patterns with repetitive components. Without the cache, the
 # space required to store a pattern would be larger in HashLife than in a naïve matrix.
-# * The [Memoization Module][memoization] stores teh results of computingthe future of squares. Just as the Canonicalization Module
-# compresses HashLife's space requirements through looking up precomputed squares, the Memoization Modul compresses hashLife's execution
+# * The [Memoization Module][memoization] stores the results of computing the future of squares. Just as the Canonicalization Module
+# compresses HashLife's space requirements through looking up precomputed squares, the Memoization Module compresses HashLife's execution
 # time requirements by looking up precomputed results.
 # * The [Garbage Collection Module][gc] implements a simple reference-counting garbage collector for the cache. For more information,
 # read [Implementing Garbage Collection in CS/JS with Aspect-Oriented Programming][igc]

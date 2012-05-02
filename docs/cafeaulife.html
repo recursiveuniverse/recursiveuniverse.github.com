@@ -49,8 +49,8 @@ provides a method for setting up the <a href="http://www.conwaylife.com/wiki/Cel
 <li>The <a href="http:canonicalization.html">Canonicalization Module</a> implements a very naive hash-table for canoncial representations of squares. HashLife uses extensive
 <a href="https://en.wikipedia.org/wiki/Canonicalization">canonicalization</a> to optimize the storage of very large patterns with repetitive components. Without the cache, the
 space required to store a pattern would be larger in HashLife than in a naïve matrix.</li>
-<li>The <a href="http:memoization.html">Memoization Module</a> stores teh results of computingthe future of squares. Just as the Canonicalization Module
-compresses HashLife's space requirements through looking up precomputed squares, the Memoization Modul compresses hashLife's execution
+<li>The <a href="http:memoization.html">Memoization Module</a> stores the results of computing the future of squares. Just as the Canonicalization Module
+compresses HashLife's space requirements through looking up precomputed squares, the Memoization Module compresses HashLife's execution
 time requirements by looking up precomputed results.</li>
 <li>The <a href="http:gc.html">Garbage Collection Module</a> implements a simple reference-counting garbage collector for the cache. For more information,
 read <a href="https://github.com/raganwald/homoiconic/blob/master/2012/03/garbage_collection_in_coffeescript.md">Implementing Garbage Collection in CS/JS with Aspect-Oriented Programming</a></li>
