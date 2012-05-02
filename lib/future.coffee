@@ -17,11 +17,15 @@ exports.mixInto = ({Square, Cell}) ->
 
   class Square.Smallest extends Square
 
-  # A Seed knows how to calculate its own result from
-  # the rules
+  # A Seed knows how to calculate its own result from the rules
   class Square.Seed extends Square
     result: ->
-      a = @to_json()
+      a = [
+        [@nw.nw.value, @nw.ne.value, @ne.nw.value, @ne.ne.value]
+        [@nw.sw.value, @nw.se.value, @ne.sw.value, @ne.se.value]
+        [@sw.nw.value, @sw.ne.value, @se.nw.value, @se.ne.value]
+        [@sw.sw.value, @sw.se.value, @se.sw.value, @se.se.value]
+      ]
       Square.for
         nw: Square.succ(a, 1,1)
         ne: Square.succ(a, 1,2)
@@ -643,7 +647,7 @@ exports.mixInto = ({Square, Cell}) ->
 
 # ## The first time through
 #
-# If this is your first time through the code, and you've already read the [Rules Module][rules], you can look at the [canonicalization][canonicalization],
+# If this is your first time through the code, and you've already read the [Universe Module][universe], you can look at the [canonicalization][canonicalization],
 # [Garbage Collection][gc], and [API][api] modules.
 #
 # [menagerie]: http:menagerie.html
