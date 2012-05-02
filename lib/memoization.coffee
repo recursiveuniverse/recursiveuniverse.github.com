@@ -18,7 +18,7 @@
 # This continues down recursively until we reach a seed square that is `2^2` by `2x2`.
 #
 # Not all patterns are as obliging as an empty square, some have fewer or greater amounts of redundancy HashLife
-# can exploit. WHich is interesting, in that the "complexity" of a pattern's future is closely linked to
+# can exploit. Which is interesting, in that the "complexity" of a pattern's future is closely linked to
 # the lack of redundancy encountered in computing the future. This is why a [Glider Gun][gun] with population 36 is many,
 # many orders of magnitude less complicated than [Rabbits][rabbits] with population 9.
 #

@@ -152,6 +152,7 @@ _.defaults exports, {Cell, Square, set_universe_rules}
 # [canonical]: https://en.wikipedia.org/wiki/Canonicalization
 # [rules]: http:rules.html
 # [gc]: http:gc.html
+# [universe]: http:universe.html
 
 # ---
 #
