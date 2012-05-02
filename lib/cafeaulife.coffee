@@ -50,17 +50,22 @@
 # in looking up precomputed results.
 #
 # Cafe au Life is an exercise in exploring the beauty of HashLife's recursive caching or results, while accepting that the
-# performance in a JavaScript application will not be anything to write home about.
+# performance in a JavaScript application will not be anything to write home about relative to hard core implementations. It's
+# still incredible relative to brute force, which is a testimony of the importance of algorithms over implementations.
 #
 # [hl]: http://en.wikipedia.org/wiki/Hashlife
 
 # Cafe au Life is divided into modules:
 #
-# * The [Rules Module][rules] provides a method for setting up the [rules][ll] of the Life universe.
-# * The [Future Module][future] provides methods for computing the future of a pattern, taking into account its ability to grow beyond
-# the size of its container square.
+# * The [Universe Module][universe] introduces the `Cell` and `Square` classes that implement the [Quadtree](https://en.wikipedia.org/wiki/Quadtree), and it also
+#   provides a method for setting up the [rules][ll] of the Life universe.
+# * The [Future Module][future] provides methods for computing the future of a square in the [Quadtree](https://en.wikipedia.org/wiki/Quadtree), making full use of recursion.
 # * The [Canonicalization Module][canonicalization] implements a very naive hash-table for canoncial representations of squares. HashLife uses extensive
-# [canonicalization][canonical] to optimize the storage of very large patterns with repetitive components.
+# [canonicalization][canonical] to optimize the storage of very large patterns with repetitive components. Without the cache, the
+# space required to store a pattern would be larger in HashLife than in a naïve matrix.
+# * The [Memoization Module][memoization] stores teh results of computingthe future of squares. Just as the Canonicalization Module
+# compresses HashLife's space requirements through looking up precomputed squares, the Memoization Modul compresses hashLife's execution
+# time requirements by looking up precomputed results.
 # * The [Garbage Collection Module][gc] implements a simple reference-counting garbage collector for the cache. For more information,
 # read [Implementing Garbage Collection in CS/JS with Aspect-Oriented Programming][igc]
 # * The [API Module][api] provides methods for grabbing json or strings of patterns and resizing them to fit expectations.
@@ -72,6 +77,7 @@
 # [api]: http:api.html
 # [future]: http:future.html
 # [canonicalization]: http:canonicalization.html
+# [memoization]: http:memoization.html
 # [canonical]: https://en.wikipedia.org/wiki/Canonicalization
 # [rules]: http:rules.html
 # [gc]: http:gc.html
@@ -91,14 +97,16 @@ _.defaults exports, universe
 
 # ## The first time through
 #
-# If this is your first time through the code, start with the [Rules Module][rules], and then read the [Future Module][future]
-# to understand the core algorithm for computing the future of a pattern. You can look at the [canonicalization][canonicalization], [Garbage Collection][gc],
-# and [API][api] modules at your leisure.
+# If this is your first time through the code, start with the [universe][universe] module, and then read the [future][future] module
+# to understand the core algorithm for computing the future of a pattern. You can look at the [canonicalization][canonicalization] and
+# [memoization][memoization] modules next to understand how Cafe au Life runs so quickly. Review the [garbage collection][gc],
+# [menagerie][menagerie], and [API][api] modules at your leisure, they are incidental to the core idea.
 #
 # [menagerie]: http:menagerie.html
 # [api]: http:api.html
 # [future]: http:future.html
 # [canonicalization]: http:canonicalization.html
+# [memoization]: http:memoization.html
 # [canonical]: https://en.wikipedia.org/wiki/Canonicalization
 # [rules]: http:rules.html
 # [gc]: http:gc.html
@@ -107,8 +115,8 @@ _.defaults exports, universe
 #
 #
 # TODO: Extract futures module so that it can run in naïve brute force mode without it. This means finding a way to generalize '.succ'.
-#       With the future module removed, it should still use a quadtree, but not cache results and notlook more than one generation into the future.
-#       The quadtree is then simply a space-saving measure.
+#       With the future module removed, it should still use a [Quadtree](https://en.wikipedia.org/wiki/Quadtree), but not cache results and notlook more than one generation into the future.
+#       The [Quadtree](https://en.wikipedia.org/wiki/Quadtree) is then simply a space-saving measure.
 #
 # TODO: Allow futures, but move *memoization* of futures into its own module.
 #

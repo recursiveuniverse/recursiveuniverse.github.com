@@ -11,15 +11,14 @@
 # ### Canoncialization: The "Hash" in HashLife
 #
 # HashLife gets a tremendous speed-up by storing and reusing squares in a giant cache.
-# Any result, at any scale, that has been computed before is reused. This is extremely
-# efficient when dealing with patterns that contain a great deal of redundancy, such as
-# the kinds of patterns constructed for the purpose of emulating circuits or machines in Life.
 #
-# Once Cafe au Life has calculated the results for the 65K possible four-by-four
-# squares, the rules are no longer applied to any generation: Any pattern of any size is
-# recursively computed terminating in a four-by-four square that has already been computed and cached.
+# The first part of making this work is "canonicalizing" squares: There is exactly one unique representation
+# of each square at every level. To take an extreme example, a 64x64 empty square requires just six
+# canonical objects: An empty `Cell` and a single `Square` for each level: 2x2, 4x4, 8x8, 16x16, 32x32 and 64x64.
+# By canonicalizing the squares, Hashlife saves an enormous amount of memory and makes it possible for the
+# crucial ability to memoize results, a feature implemented in the [memoization][memoization] module.
 #
-# This module provides a `mixInto` function so that it retroactively modify existing classes.
+# [memoization]: http:memoization.html
 
 # ### Baseline Setup
 _ = require('underscore')
@@ -32,6 +31,7 @@ exports ?= window or this
 # to a cached square. The buckets are organized by level of the square. This allows some simple
 # ordering later when we start fooling around with garbage collection: It's easy to find the
 # largest squares that aren't in use.
+
 exports.mixInto = ({Square, Cell}) ->
 
   counter = 1 # Cell.Alive.value
@@ -81,13 +81,15 @@ exports
 
 # ## The first time through
 #
-# If this is your first time through the code, and you've already read the [Rules][rules] and [Future][future] modules, you can look at the
-# [Garbage Collection][gc] and [API][api] modules next.
+# Now that you've finished the [universe][universe], [future][future] and [canonicalization][canonicalization] modules,
+# review the [memoization][memoization] module to understand the other half of how Cafe au Life runs so quickly. Review the [garbage collection][gc],
+# [menagerie][menagerie], and [API][api] modules at your leisure, they are incidental to the core idea.
 #
 # [menagerie]: http:menagerie.html
 # [api]: http:api.html
 # [future]: http:future.html
 # [canonicalization]: http:canonicalization.html
+# [memoization]: http:memoization.html
 # [canonical]: https://en.wikipedia.org/wiki/Canonicalization
 # [rules]: http:rules.html
 # [gc]: http:gc.html

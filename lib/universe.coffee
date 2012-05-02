@@ -3,12 +3,10 @@
 # ## Universe Module
 #
 # The Universe Module provides the basic `Cell` and `Square` classes needed to
-# represent the Life universe as a QuadTree. Every othere module depends on
+# represent the Life universe as a [Quadtree](https://en.wikipedia.org/wiki/Quadtree). Every other module depends on
 # universe.coffee.
 
 # ### The Life "Universe"
-#
-# This module mixes special case functionality for computing the `future` of a square into `Square` and `Cell`.
 
 # ### Baseline Setup
 _ = require('underscore')
@@ -65,6 +63,8 @@ _.defaults Cell,
 #
 # And those in turn are each composed of four cells, which cannot be subdivided. (For simplicity, a Cafe au Life
 # board is represented as one such large square, although the HashLife algorithm can be used to handle any board shape by tiling it with squares.)
+#
+# As noted above, this data structure is a [Quadtree](https://en.wikipedia.org/wiki/Quadtree).
 
 class Square
   constructor: ({@nw, @ne, @se, @sw}) ->
@@ -132,4 +132,34 @@ set_universe_rules = (survival = [2,3], birth = [3]) ->
 
   exports
 
+# **Reminder**: the Universe module doesn't actually implement any computation of the future of a pattern, it simply
+# provides the `Square.succ` helper that the [Future] module uses. You could just as easily use this helper method to
+# construct a naïve algorithm.
+
 _.defaults exports, {Cell, Square, set_universe_rules}
+
+# ## The first time through
+#
+# Now that you've finished the [Universe Module][universe], read the [Future Module][future]
+# next to understand the core algorithm for computing the future of a pattern. Then move on to the [canonicalization][canonicalization] and
+# [memoization][memoization] modules to understand how Cafe au Life runs so quickly. Review the [garbage collection][gc],
+# [menagerie][menagerie], and [API][api] modules at your leisure, they are incidental to the core idea.
+#
+# [menagerie]: http:menagerie.html
+# [api]: http:api.html
+# [future]: http:future.html
+# [canonicalization]: http:canonicalization.html
+# [canonical]: https://en.wikipedia.org/wiki/Canonicalization
+# [rules]: http:rules.html
+# [gc]: http:gc.html
+
+# ---
+#
+# **(c) 2012 [Reg Braithwaite](http://braythwayt.com)** ([@raganwald](http://twitter.com/raganwald))
+#
+# Cafe au Life is freely distributable under the terms of the [MIT license](http://en.wikipedia.org/wiki/MIT_License).
+#
+# The annotated source code was generated directly from the [original source][source] using [Docco][docco].
+#
+# [source]: https://github.com/recursiveuniverse/recursiveuniverse.github.com/blob/master/lib
+# [docco]: http://jashkenas.github.com/docco/

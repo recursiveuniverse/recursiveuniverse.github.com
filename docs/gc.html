@@ -41,7 +41,7 @@ on the fly. And we never garbage collect cells, level 1, or level 2 squares (the
 
     <span class="nv">remove: </span><span class="nf">(square) -&gt;</span>
       <span class="nx">@length</span> <span class="o">-=</span> <span class="mi">1</span>
-      <span class="k">delete</span> <span class="p">(</span><span class="nx">@buckets</span><span class="p">[</span><span class="nx">square</span><span class="p">.</span><span class="nx">nw</span><span class="p">.</span><span class="nx">level</span> <span class="o">+</span> <span class="mi">1</span><span class="p">]</span> <span class="o">||=</span> <span class="p">{})[</span><span class="s2">&quot;#{square.nw.id}-#{square.ne.id}-#{square.se.id}-#{square.sw.id}&quot;</span><span class="p">]</span>
+      <span class="k">delete</span> <span class="p">(</span><span class="nx">@buckets</span><span class="p">[</span><span class="nx">square</span><span class="p">.</span><span class="nx">level</span><span class="p">])[</span><span class="nx">@cache_key</span><span class="p">(</span><span class="nx">square</span><span class="p">)]</span>
       <span class="nx">square</span>
 
   <span class="nx">_</span><span class="p">.</span><span class="nx">extend</span> <span class="nx">Cell</span><span class="p">.</span><span class="nx">prototype</span><span class="p">,</span>
@@ -97,9 +97,11 @@ on the fly. And we never garbage collect cells, level 1, or level 2 squares (the
     <span class="nv">removeRecursively: </span><span class="o">-&gt;</span></pre></div>             </td>           </tr>                               <tr id="section-5">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-5">&#182;</a>               </div>               <h3>Modifying <code>Square.RecursivelyComputable</code></h3>
 
 <p>We take advantage of the way <code>Square.RecursivelyComputable</code> is factored to introduce reference
-counting and add methods to remove a recursively computable square from the cache.</p>             </td>             <td class="code">               <div class="highlight"><pre>  <span class="nx">YouAreDaChef</span><span class="p">(</span><span class="nx">Square</span><span class="p">.</span><span class="nx">RecursivelyComputable</span><span class="p">)</span>
+counting and add methods to remove a recursively computable square from the cache.</p>             </td>             <td class="code">               <div class="highlight"><pre>  <span class="nx">YouAreDaChef</span><span class="p">(</span><span class="nx">Square</span><span class="p">)</span>
     <span class="p">.</span><span class="nx">after</span> <span class="s1">&#39;initialize&#39;</span><span class="p">,</span> <span class="o">-&gt;</span>
       <span class="vi">@references = </span><span class="mi">0</span>
+
+  <span class="nx">YouAreDaChef</span><span class="p">(</span><span class="nx">Square</span><span class="p">.</span><span class="nx">RecursivelyComputable</span><span class="p">)</span>
     <span class="p">.</span><span class="nx">before</span> <span class="s1">&#39;set_memo&#39;</span><span class="p">,</span> <span class="nf">(index) -&gt;</span>
       <span class="k">if</span> <span class="p">(</span><span class="nv">existing = </span><span class="nx">@get_memo</span><span class="p">(</span><span class="nx">index</span><span class="p">))</span>
         <span class="nx">existing</span><span class="p">.</span><span class="nx">decrementReference</span><span class="p">()</span>
@@ -119,7 +121,7 @@ counting and add methods to remove a recursively computable square from the cach
       <span class="k">throw</span> <span class="s2">&quot;incrementReference!? #{@references}&quot;</span> <span class="nx">unless</span> <span class="nx">@references</span> <span class="o">&gt;=</span> <span class="mi">0</span>
       <span class="nx">@references</span> <span class="o">+=</span> <span class="mi">1</span>
       <span class="k">this</span>
-    <span class="nv">decrementReference: </span><span class="nf">() -&gt;</span>
+    <span class="nv">decrementReference: </span><span class="o">-&gt;</span>
       <span class="k">throw</span> <span class="s2">&quot;decrementReference!?&quot;</span> <span class="nx">unless</span> <span class="nx">@references</span> <span class="o">&gt;</span> <span class="mi">0</span>
       <span class="nx">@references</span> <span class="o">-=</span> <span class="mi">1</span>
       <span class="k">this</span>
@@ -202,10 +204,7 @@ are written, such as always using <code>sequence</code> and a <code>parameter_ha
       <span class="p">)</span>
 
   <span class="s2">&quot;garbage collection can be disabled by commenting this line out&quot;</span>
-  <span class="nv">Square.RecursivelyComputable.sequence = </span><span class="nx">Square</span><span class="p">.</span><span class="nx">cache</span><span class="p">.</span><span class="nx">sequence</span></pre></div>             </td>           </tr>                               <tr id="section-8">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-8">&#182;</a>               </div>               <h2>The first time through</h2>
-
-<p>If this is your first time through the code, and you've already read the <a href="http:rules.html">Rules</a>, <a href="http:future.html">Future</a>, and <a href="http:canonicalization.html">canonicalization</a>
-modules, you can look at the <a href="http:api.html">API</a> module next.</p>             </td>             <td class="code">               <div class="highlight"><pre></pre></div>             </td>           </tr>                               <tr id="section-9">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-9">&#182;</a>               </div>               <hr />
+  <span class="nv">Square.RecursivelyComputable.sequence = </span><span class="nx">Square</span><span class="p">.</span><span class="nx">cache</span><span class="p">.</span><span class="nx">sequence</span></pre></div>             </td>           </tr>                               <tr id="section-8">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-8">&#182;</a>               </div>               <hr />
 
 <p><strong>(c) 2012 <a href="http://braythwayt.com">Reg Braithwaite</a></strong> (<a href="http://twitter.com/raganwald">@raganwald</a>)</p>
 

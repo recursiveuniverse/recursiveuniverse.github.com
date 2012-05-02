@@ -5,16 +5,13 @@
 <p>HashLife uses extensive <a href="https://en.wikipedia.org/wiki/Canonicalization">canonicalization</a> to optimize the storage of very large patterns with repetitive
 components. The Canonicalization Module implements a very naive hash-table for canoncial representations of squares.</p>             </td>             <td class="code">               <div class="highlight"><pre></pre></div>             </td>           </tr>                               <tr id="section-2">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-2">&#182;</a>               </div>               <h3>Canoncialization: The "Hash" in HashLife</h3>
 
-<p>HashLife gets a tremendous speed-up by storing and reusing squares in a giant cache.
-Any result, at any scale, that has been computed before is reused. This is extremely
-efficient when dealing with patterns that contain a great deal of redundancy, such as
-the kinds of patterns constructed for the purpose of emulating circuits or machines in Life.</p>
+<p>HashLife gets a tremendous speed-up by storing and reusing squares in a giant cache.</p>
 
-<p>Once Cafe au Life has calculated the results for the 65K possible four-by-four
-squares, the rules are no longer applied to any generation: Any pattern of any size is
-recursively computed terminating in a four-by-four square that has already been computed and cached.</p>
-
-<p>This module provides a <code>mixInto</code> function so that it retroactively modify existing classes.</p>             </td>             <td class="code">               <div class="highlight"><pre></pre></div>             </td>           </tr>                               <tr id="section-3">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-3">&#182;</a>               </div>               <h3>Baseline Setup</h3>             </td>             <td class="code">               <div class="highlight"><pre><span class="nv">_ = </span><span class="nx">require</span><span class="p">(</span><span class="s1">&#39;underscore&#39;</span><span class="p">)</span>
+<p>The first part of making this work is "canonicalizing" squares: There is exactly one unique representation
+of each square at every level. To take an extreme example, a 64x64 empty square requires just six
+canonical objects: An empty <code>Cell</code> and a single <code>Square</code> for each level: 2x2, 4x4, 8x8, 16x16, 32x32 and 64x64.
+By canonicalizing the squares, Hashlife saves an enormous amount of memory and makes it possible for the
+crucial ability to memoize results, a feature implemented in the <a href="http:memoization.html">memoization</a> module.</p>             </td>             <td class="code">               <div class="highlight"><pre></pre></div>             </td>           </tr>                               <tr id="section-3">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-3">&#182;</a>               </div>               <h3>Baseline Setup</h3>             </td>             <td class="code">               <div class="highlight"><pre><span class="nv">_ = </span><span class="nx">require</span><span class="p">(</span><span class="s1">&#39;underscore&#39;</span><span class="p">)</span>
 <span class="nv">YouAreDaChef = </span><span class="nx">require</span><span class="p">(</span><span class="s1">&#39;YouAreDaChef&#39;</span><span class="p">).</span><span class="nx">YouAreDaChef</span>
 <span class="nx">exports</span> <span class="o">?=</span> <span class="nb">window</span> <span class="o">or</span> <span class="k">this</span></pre></div>             </td>           </tr>                               <tr id="section-4">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-4">&#182;</a>               </div>               <h3>Implementing the cache</h3>
 
@@ -23,21 +20,20 @@ to a cached square. The buckets are organized by level of the square. This allow
 ordering later when we start fooling around with garbage collection: It's easy to find the
 largest squares that aren't in use.</p>             </td>             <td class="code">               <div class="highlight"><pre><span class="nv">exports.mixInto = </span><span class="nf">({Square, Cell}) -&gt;</span>
 
-  <span class="nv">counter = </span><span class="mi">0</span>
-
-  <span class="nx">YouAreDaChef</span><span class="p">(</span><span class="nx">Cell</span><span class="p">)</span>
-    <span class="p">.</span><span class="nx">after</span> <span class="s1">&#39;initialize&#39;</span><span class="p">,</span> <span class="o">-&gt;</span>
-      <span class="vi">@id = </span><span class="p">(</span><span class="nx">counter</span> <span class="o">+=</span> <span class="mi">1</span><span class="p">)</span>
+  <span class="nv">counter = </span><span class="mi">1</span> <span class="c1"># Cell.Alive.value</span>
 
   <span class="nx">YouAreDaChef</span><span class="p">(</span><span class="nx">Square</span><span class="p">)</span>
     <span class="p">.</span><span class="nx">after</span> <span class="s1">&#39;initialize&#39;</span><span class="p">,</span> <span class="o">-&gt;</span>
-      <span class="vi">@id = </span><span class="p">(</span><span class="nx">counter</span> <span class="o">+=</span> <span class="mi">1</span><span class="p">)</span>
+      <span class="vi">@value = </span><span class="p">(</span><span class="nx">counter</span> <span class="o">+=</span> <span class="mi">1</span><span class="p">)</span>
 
   <span class="nv">_for = </span><span class="nx">Square</span><span class="p">.</span><span class="k">for</span>
 
   <span class="nx">_</span><span class="p">.</span><span class="nx">extend</span> <span class="nx">Square</span><span class="p">,</span>
 
     <span class="nv">cache:</span>
+
+      <span class="nv">cache_key: </span><span class="nf">({nw, ne, se, sw}) -&gt;</span>
+        <span class="s2">&quot;#{nw.value}-#{ne.value}-#{se.value}-#{sw.value}&quot;</span>
 
       <span class="nv">buckets: </span><span class="p">[]</span>
 
@@ -46,14 +42,18 @@ largest squares that aren't in use.</p>             </td>             <td class=
 
       <span class="nv">length: </span><span class="mi">0</span>
 
-      <span class="nv">find: </span><span class="nf">({nw, ne, se, sw}) -&gt;</span>
+      <span class="nv">size: </span><span class="o">-&gt;</span>
+        <span class="nx">_</span><span class="p">.</span><span class="nx">reduce</span> <span class="nx">@buckets</span><span class="p">,</span> <span class="p">(</span><span class="nf">(acc, bucket) -&gt;</span> <span class="nx">acc</span> <span class="o">+</span> <span class="nx">_</span><span class="p">.</span><span class="nx">keys</span><span class="p">(</span><span class="nx">bucket</span><span class="p">).</span><span class="nx">length</span><span class="p">),</span> <span class="mi">0</span>
+
+      <span class="nv">find: </span><span class="nf">(square) -&gt;</span>
+        <span class="p">{</span><span class="nx">nw</span><span class="p">,</span> <span class="nx">ne</span><span class="p">,</span> <span class="nx">se</span><span class="p">,</span> <span class="nx">sw</span><span class="p">}</span> <span class="o">=</span> <span class="nx">square</span>
         <span class="nx">console</span><span class="p">.</span><span class="nx">trace</span><span class="p">()</span> <span class="nx">unless</span> <span class="nx">nw</span><span class="o">?</span><span class="p">.</span><span class="nx">level</span><span class="o">?</span>
-        <span class="p">(</span><span class="nx">@buckets</span><span class="p">[</span><span class="nx">nw</span><span class="p">.</span><span class="nx">level</span> <span class="o">+</span> <span class="mi">1</span><span class="p">]</span> <span class="o">||=</span> <span class="p">{})[</span><span class="s2">&quot;#{nw.id}-#{ne.id}-#{se.id}-#{sw.id}&quot;</span><span class="p">]</span>
+        <span class="p">(</span><span class="nx">@buckets</span><span class="p">[</span><span class="nx">nw</span><span class="p">.</span><span class="nx">level</span> <span class="o">+</span> <span class="mi">1</span><span class="p">]</span> <span class="o">||=</span> <span class="p">{})[</span><span class="nx">@cache_key</span><span class="p">(</span><span class="nx">square</span><span class="p">)]</span>
 
       <span class="nv">add: </span><span class="nf">(square) -&gt;</span>
         <span class="nx">@length</span> <span class="o">+=</span> <span class="mi">1</span>
         <span class="p">{</span><span class="nx">nw</span><span class="p">,</span> <span class="nx">ne</span><span class="p">,</span> <span class="nx">se</span><span class="p">,</span> <span class="nx">sw</span><span class="p">}</span> <span class="o">=</span> <span class="nx">square</span>
-        <span class="p">(</span><span class="nx">@buckets</span><span class="p">[</span><span class="nx">nw</span><span class="p">.</span><span class="nx">level</span> <span class="o">+</span> <span class="mi">1</span><span class="p">]</span> <span class="o">||=</span> <span class="p">{})[</span><span class="s2">&quot;#{nw.id}-#{ne.id}-#{se.id}-#{sw.id}&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="nx">square</span>
+        <span class="p">(</span><span class="nx">@buckets</span><span class="p">[</span><span class="nx">nw</span><span class="p">.</span><span class="nx">level</span> <span class="o">+</span> <span class="mi">1</span><span class="p">]</span> <span class="o">||=</span> <span class="p">{})[</span><span class="nx">@cache_key</span><span class="p">(</span><span class="nx">square</span><span class="p">)]</span> <span class="o">=</span> <span class="nx">square</span>
 
     <span class="k">for</span><span class="o">:</span> <span class="nf">(quadrants, creator) -&gt;</span>
       <span class="nv">found = </span><span class="nx">Square</span><span class="p">.</span><span class="nx">cache</span><span class="p">.</span><span class="nx">find</span><span class="p">(</span><span class="nx">quadrants</span><span class="p">)</span>
@@ -61,12 +61,13 @@ largest squares that aren't in use.</p>             </td>             <td class=
         <span class="nx">found</span>
       <span class="k">else</span>
         <span class="p">{</span><span class="nx">nw</span><span class="p">,</span> <span class="nx">ne</span><span class="p">,</span> <span class="nx">se</span><span class="p">,</span> <span class="nx">sw</span><span class="p">}</span> <span class="o">=</span> <span class="nx">quadrants</span>
-        <span class="nx">Square</span><span class="p">.</span><span class="nx">cache</span><span class="p">.</span><span class="nx">add</span> <span class="nx">_for</span><span class="p">.</span><span class="nx">call</span><span class="p">(</span><span class="k">this</span><span class="p">,</span> <span class="nx">quadrants</span><span class="p">,</span> <span class="nx">creator</span><span class="p">)</span>
+        <span class="nx">Square</span><span class="p">.</span><span class="nx">cache</span><span class="p">.</span><span class="nx">add</span> <span class="nx">_for</span><span class="p">(</span><span class="nx">quadrants</span><span class="p">,</span> <span class="nx">creator</span><span class="p">)</span>
 
 <span class="nx">exports</span></pre></div>             </td>           </tr>                               <tr id="section-5">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-5">&#182;</a>               </div>               <h2>The first time through</h2>
 
-<p>If this is your first time through the code, and you've already read the <a href="http:rules.html">Rules</a> and <a href="http:future.html">Future</a> modules, you can look at the
-<a href="http:gc.html">Garbage Collection</a> and <a href="http:api.html">API</a> modules next.</p>             </td>             <td class="code">               <div class="highlight"><pre></pre></div>             </td>           </tr>                               <tr id="section-6">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-6">&#182;</a>               </div>               <hr />
+<p>Now that you've finished the [universe][universe], <a href="http:future.html">future</a> and <a href="http:canonicalization.html">canonicalization</a> modules,
+review the <a href="http:memoization.html">memoization</a> module to understand the other half of how Cafe au Life runs so quickly. Review the <a href="http:gc.html">garbage collection</a>,
+<a href="http:menagerie.html">menagerie</a>, and <a href="http:api.html">API</a> modules at your leisure, they are incidental to the core idea.</p>             </td>             <td class="code">               <div class="highlight"><pre></pre></div>             </td>           </tr>                               <tr id="section-6">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-6">&#182;</a>               </div>               <hr />
 
 <p><strong>(c) 2012 <a href="http://braythwayt.com">Reg Braithwaite</a></strong> (<a href="http://twitter.com/raganwald">@raganwald</a>)</p>
 

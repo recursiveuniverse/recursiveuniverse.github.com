@@ -647,13 +647,15 @@ exports.mixInto = ({Square, Cell}) ->
 
 # ## The first time through
 #
-# If this is your first time through the code, and you've already read the [Universe Module][universe], you can look at the [canonicalization][canonicalization],
-# [Garbage Collection][gc], and [API][api] modules.
+# Now that you've finished the [universe][universe] and [future][future] modules, move on to the [canonicalization][canonicalization] and
+# [memoization][memoization] modules to understand how Cafe au Life runs so quickly. Review the [garbage collection][gc],
+# [menagerie][menagerie], and [API][api] modules at your leisure, they are incidental to the core idea.
 #
 # [menagerie]: http:menagerie.html
 # [api]: http:api.html
 # [future]: http:future.html
 # [canonicalization]: http:canonicalization.html
+# [memoization]: http:memoization.html
 # [canonical]: https://en.wikipedia.org/wiki/Canonicalization
 # [rules]: http:rules.html
 # [gc]: http:gc.html

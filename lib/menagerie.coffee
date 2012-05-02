@@ -137,3 +137,14 @@ _.defaults exports,
     ...O....O..O.....O
     ..O....O........O.
   '''
+
+# ---
+#
+# **(c) 2012 [Reg Braithwaite](http://braythwayt.com)** ([@raganwald](http://twitter.com/raganwald))
+#
+# Cafe au Life is freely distributable under the terms of the [MIT license](http://en.wikipedia.org/wiki/MIT_License).
+#
+# The annotated source code was generated directly from the [original source][source] using [Docco][docco].
+#
+# [source]: https://github.com/recursiveuniverse/recursiveuniverse.github.com/blob/master/lib
+# [docco]: http://jashkenas.github.com/docco/

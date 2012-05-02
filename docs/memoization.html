@@ -1,20 +1,37 @@
 <!DOCTYPE html>  <html> <head>   <title>memoization.coffee</title>   <meta http-equiv="content-type" content="text/html; charset=UTF-8">   <link rel="stylesheet" media="all" href="docco.css" /> </head> <body>   <div id="container">     <div id="background"></div>            <div id="jump_to">         Jump To &hellip;         <div id="jump_wrapper">           <div id="jump_page">                                           <a class="source" href="api.html">                 api.coffee               </a>                                           <a class="source" href="cafeaulife.html">                 cafeaulife.coffee               </a>                                           <a class="source" href="canonicalization.html">                 canonicalization.coffee               </a>                                           <a class="source" href="future.html">                 future.coffee               </a>                                           <a class="source" href="gc.html">                 gc.coffee               </a>                                           <a class="source" href="memoization.html">                 memoization.coffee               </a>                                           <a class="source" href="menagerie.html">                 menagerie.coffee               </a>                                           <a class="source" href="universe.html">                 universe.coffee               </a>                        </div>         </div>       </div>          <table cellpadding="0" cellspacing="0">       <thead>         <tr>           <th class="docs">             <h1>               memoization.coffee             </h1>           </th>           <th class="code">           </th>         </tr>       </thead>       <tbody>                               <tr id="section-1">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-1">&#182;</a>               </div>               <p>This module is part of <a href="http://recursiveuniver.se">recursiveuniver.se</a>.</p>
 
-<h2>Basic Memoization Module</h2>
+<h2>Memoization Module</h2>
 
-<p>The Future Module provides methods for computing the future of a pattern, taking into account its ability to grow beyond
-the size of its container square.</p>             </td>             <td class="code">               <div class="highlight"><pre></pre></div>             </td>           </tr>                               <tr id="section-2">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-2">&#182;</a>               </div>               <h3>The Life "Universe"</h3>
+<p>HashLife uses extensive <a href="https://en.wikipedia.org/wiki/Canonicalization">canonicalization</a> to optimize the storage of very large patterns with repetitive
+components. The <a href="http:canonicalization.html">Canonicalization Module</a> implements a very naive hash-table for canoncial
+representations of squares.</p>
 
-<p>The memoizing is a little more bespoke than you would usually see. Normally,
+<p>Since every unique square has a single canonical representation in the cache, HashLife is able to "memoize" results
+such as its future at a particular time. Consider the completely degenerate example of an empty square that is
+<code>2^64</code> by <code>2^64</code> (18,446,744,073,709,552,000 a side). In order to compute its history, the Hashlife algorithm
+first constructs nine squares that are <code>2^32</code> a side. Naturally, they're all identical, empty squares. HashLife
+needs to computer their future, so it computes the first one and memoizes it. When it gets the result for the
+remaining eight, it re-uses the memoized result.</p>
+
+<p>That goes down recursively, of course. Computing the future of an empty <code>2^32</code> by <code>2^32</code> square starts with
+getting the future of nine identical empty <code>2^31</code> by <code>2^31</code> squares, and that result is only computed once.
+This continues down recursively until we reach a seed square that is <code>2^2</code> by <code>2x2</code>.</p>
+
+<p>Not all patterns are as obliging as an empty square, some have fewer or greater amounts of redundancy HashLife
+can exploit. WHich is interesting, in that the "complexity" of a pattern's future is closely linked to
+the lack of redundancy encountered in computing the future. This is why a <a href="http://www.conwaylife.com/wiki/index.php?title=Gosper_glider_gun">Glider Gun</a> with population 36 is many,
+many orders of magnitude less complicated than <a href="http://www.ericweisstein.com/encyclopedias/life/Rabbits.html">Rabbits</a> with population 9.</p>             </td>             <td class="code">               <div class="highlight"><pre></pre></div>             </td>           </tr>                               <tr id="section-2">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-2">&#182;</a>               </div>               <h3>Implementing Memoization</h3>
+
+<p>The implementation is a little more bespoke than you would usually see. Normally,
 you would use something like;</p>
 
 <p>@some<em>memoized</em>method = <em>.memoize( ->
     "method</em>body<em>goes</em>here"
   )</p>
 
-<p>However, rolling our own memoize infrastructure allows us to construct
+<p>However, rolling our own memoization infrastructure allows us to construct
 the <code>children</code> method that shows us which squares are logically related to any given
-square, by dint of being its quadrants or result at any time in the future</p>             </td>             <td class="code">               <div class="highlight"><pre></pre></div>             </td>           </tr>                               <tr id="section-3">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-3">&#182;</a>               </div>               <h3>Baseline Setup</h3>             </td>             <td class="code">               <div class="highlight"><pre></pre></div>             </td>           </tr>                               <tr id="section-4">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-4">&#182;</a>               </div>               <h3>Baseline Setup</h3>             </td>             <td class="code">               <div class="highlight"><pre><span class="nv">_ = </span><span class="nx">require</span><span class="p">(</span><span class="s1">&#39;underscore&#39;</span><span class="p">)</span>
+square, by dint of being its quadrants or result at any time in the future.</p>             </td>             <td class="code">               <div class="highlight"><pre></pre></div>             </td>           </tr>                               <tr id="section-3">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-3">&#182;</a>               </div>               <h3>Baseline Setup</h3>             </td>             <td class="code">               <div class="highlight"><pre><span class="nv">_ = </span><span class="nx">require</span><span class="p">(</span><span class="s1">&#39;underscore&#39;</span><span class="p">)</span>
 <span class="nv">YouAreDaChef = </span><span class="nx">require</span><span class="p">(</span><span class="s1">&#39;YouAreDaChef&#39;</span><span class="p">).</span><span class="nx">YouAreDaChef</span>
 <span class="nx">exports</span> <span class="o">?=</span> <span class="nb">window</span> <span class="o">or</span> <span class="k">this</span>
 
@@ -39,6 +56,14 @@ square, by dint of being its quadrants or result at any time in the future</p>  
           <span class="nx">@get_memo</span><span class="p">(</span><span class="nx">index</span><span class="p">)</span> <span class="o">or</span> <span class="nx">@set_memo</span><span class="p">(</span><span class="nx">index</span><span class="p">,</span> <span class="nx">method_body</span><span class="p">.</span><span class="nx">call</span><span class="p">(</span><span class="k">this</span><span class="p">,</span> <span class="nx">args</span><span class="p">...))</span>
 
   <span class="nx">memoize</span> <span class="nx">Square</span><span class="p">.</span><span class="nx">Seed</span><span class="p">,</span> <span class="s1">&#39;result&#39;</span>
-  <span class="nx">memoize</span> <span class="nx">Square</span><span class="p">.</span><span class="nx">RecursivelyComputable</span><span class="p">,</span> <span class="s1">&#39;result&#39;</span><span class="p">,</span> <span class="s1">&#39;result_at_time&#39;</span>
+  <span class="nx">memoize</span> <span class="nx">Square</span><span class="p">.</span><span class="nx">RecursivelyComputable</span><span class="p">,</span> <span class="s1">&#39;result&#39;</span><span class="p">,</span> <span class="s1">&#39;result_at_time&#39;</span></pre></div>             </td>           </tr>                               <tr id="section-4">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-4">&#182;</a>               </div>               <h2>The first time through</h2>
 
-</pre></div>             </td>           </tr>                </tbody>     </table>   </div> </body> </html> 
+<p>Congratulations, you've finished the four core modules ([universe][universe], <a href="http:future.html">future</a>, <a href="http:canonicalization.html">canonicalization</a> and
+<a href="http:memoization.html">memoization</a>) that make up Cafe au Life. Review the <a href="http:gc.html">garbage collection</a>,
+<a href="http:menagerie.html">menagerie</a>, and <a href="http:api.html">API</a> modules at your leisure, they are incidental to the core idea.</p>             </td>             <td class="code">               <div class="highlight"><pre></pre></div>             </td>           </tr>                               <tr id="section-5">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-5">&#182;</a>               </div>               <hr />
+
+<p><strong>(c) 2012 <a href="http://braythwayt.com">Reg Braithwaite</a></strong> (<a href="http://twitter.com/raganwald">@raganwald</a>)</p>
+
+<p>Cafe au Life is freely distributable under the terms of the <a href="http://en.wikipedia.org/wiki/MIT_License">MIT license</a>.</p>
+
+<p>The annotated source code was generated directly from the <a href="https://github.com/recursiveuniverse/recursiveuniverse.github.com/blob/master/lib">original source</a> using <a href="http://jashkenas.github.com/docco/">Docco</a>.</p>             </td>             <td class="code">               <div class="highlight"><pre></pre></div>             </td>           </tr>                </tbody>     </table>   </div> </body> </html> 

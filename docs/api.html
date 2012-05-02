@@ -8,7 +8,7 @@
 
 <span class="nv">exports.mixInto = </span><span class="nf">({Square, Cell}) -&gt;</span></pre></div>             </td>           </tr>                               <tr id="section-3">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-3">&#182;</a>               </div>               <h3>Extracting matrices and strings from Cells and Squares</h3>             </td>             <td class="code">               <div class="highlight"><pre>  <span class="nx">_</span><span class="p">.</span><span class="nx">extend</span> <span class="nx">Cell</span><span class="p">.</span><span class="nx">prototype</span><span class="p">,</span>
     <span class="nv">to_json: </span><span class="o">-&gt;</span>
-      <span class="p">[</span><span class="nx">@value</span><span class="p">]</span>
+      <span class="p">[[</span><span class="nx">@value</span><span class="p">]]</span>
     <span class="nv">toString: </span><span class="o">-&gt;</span>
       <span class="s1">&#39;&#39;</span> <span class="o">+</span> <span class="nx">@value</span>
 
@@ -36,12 +36,29 @@
     <span class="nv">toString: </span><span class="o">-&gt;</span>
       <span class="p">(</span><span class="nx">_</span><span class="p">.</span><span class="nx">map</span> <span class="nx">@to_json</span><span class="p">(),</span> <span class="nf">(row) -&gt;</span>
         <span class="p">([</span><span class="s1">&#39; &#39;</span><span class="p">,</span> <span class="s1">&#39;*&#39;</span><span class="p">][</span><span class="nx">c</span><span class="p">]</span> <span class="k">for</span> <span class="nx">c</span> <span class="k">in</span> <span class="nx">row</span><span class="p">).</span><span class="nx">join</span><span class="p">(</span><span class="s1">&#39;&#39;</span><span class="p">)</span>
-      <span class="p">).</span><span class="nx">join</span><span class="p">(</span><span class="s1">&#39;\n&#39;</span><span class="p">)</span></pre></div>             </td>           </tr>                               <tr id="section-4">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-4">&#182;</a>               </div>               <h3>Constructing squares from matrices and strings</h3>             </td>             <td class="code">               <div class="highlight"><pre>  <span class="nx">_</span><span class="p">.</span><span class="nx">extend</span> <span class="nx">Square</span><span class="p">,</span>
+      <span class="p">).</span><span class="nx">join</span><span class="p">(</span><span class="s1">&#39;\n&#39;</span><span class="p">)</span></pre></div>             </td>           </tr>                               <tr id="section-4">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-4">&#182;</a>               </div>               <h3>Constructing squares from matrices and strings</h3>             </td>             <td class="code">               <div class="highlight"><pre>  <span class="k">throw</span> <span class="s1">&#39;Wanted alive or dead&#39;</span> <span class="nx">unless</span> <span class="nx">Cell</span><span class="p">.</span><span class="nx">Alive</span><span class="o">?</span> <span class="o">and</span> <span class="nx">Cell</span><span class="p">.</span><span class="nx">Dead</span><span class="o">?</span>
+
+  <span class="nx">_</span><span class="p">.</span><span class="nx">extend</span> <span class="nx">Cell</span><span class="p">,</span>
+    <span class="nv">from_json: </span><span class="nf">(json) -&gt;</span>
+      <span class="k">throw</span> <span class="s1">&#39;Unh?&#39;</span> <span class="nx">unless</span> <span class="nx">Cell</span><span class="p">.</span><span class="nx">Alive</span><span class="p">.</span><span class="nx">value</span> <span class="o">is</span> <span class="mi">1</span> <span class="o">and</span> <span class="nx">Cell</span><span class="p">.</span><span class="nx">Dead</span><span class="p">.</span><span class="nx">value</span> <span class="o">is</span> <span class="mi">0</span>
+      <span class="k">if</span> <span class="nx">json</span><span class="p">.</span><span class="nx">length</span> <span class="o">is</span> <span class="mi">1</span>
+        <span class="k">if</span> <span class="nx">json</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span> <span class="k">instanceof</span> <span class="nx">Cell</span>
+          <span class="nx">json</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span>
+        <span class="k">else</span> <span class="k">if</span> <span class="nx">json</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span> <span class="o">is</span> <span class="mi">0</span>
+          <span class="nx">Cell</span><span class="p">.</span><span class="nx">Dead</span>
+        <span class="k">else</span> <span class="k">if</span> <span class="nx">json</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span> <span class="o">is</span> <span class="mi">1</span>
+          <span class="nx">Cell</span><span class="p">.</span><span class="nx">Alive</span>
+        <span class="k">else</span>
+          <span class="k">throw</span> <span class="s1">&#39;a 1x1 square must contain a zero, one, or Cell&#39;</span>
+      <span class="k">else</span>
+        <span class="k">throw</span> <span class="s1">&#39;cannot handle larger squares&#39;</span>
+
+  <span class="nx">_</span><span class="p">.</span><span class="nx">extend</span> <span class="nx">Square</span><span class="p">,</span>
     <span class="nv">from_string: </span><span class="nf">(str) -&gt;</span>
       <span class="nv">strs = </span><span class="nx">str</span><span class="p">.</span><span class="nx">split</span><span class="p">(</span><span class="s1">&#39;\n&#39;</span><span class="p">)</span>
       <span class="nv">json = </span><span class="nx">_</span><span class="p">.</span><span class="nx">map</span> <span class="nx">strs</span><span class="p">,</span> <span class="nf">(ln) -&gt;</span>
         <span class="p">{</span><span class="s1">&#39;.&#39;</span><span class="o">:</span> <span class="mi">0</span><span class="p">,</span> <span class="s1">&#39; &#39;</span><span class="o">:</span> <span class="mi">0</span><span class="p">,</span> <span class="s1">&#39;O&#39;</span><span class="o">:</span> <span class="mi">1</span><span class="p">,</span> <span class="s1">&#39;+&#39;</span><span class="o">:</span> <span class="mi">1</span><span class="p">,</span> <span class="s1">&#39;*&#39;</span><span class="o">:</span> <span class="mi">1</span><span class="p">}[</span><span class="nx">c</span><span class="p">]</span> <span class="k">for</span> <span class="nx">c</span> <span class="k">in</span> <span class="nx">ln</span>
-      <span class="nx">@from_json</span><span class="p">(</span><span class="nx">json</span><span class="p">)</span>
+      <span class="nx">Square</span><span class="p">.</span><span class="nx">from_json</span><span class="p">(</span><span class="nx">json</span><span class="p">)</span>
     <span class="nv">from_json: </span><span class="nf">(json) -&gt;</span>
       <span class="nv">dims = </span><span class="p">[</span><span class="nx">json</span><span class="p">.</span><span class="nx">length</span><span class="p">].</span><span class="nx">concat</span> <span class="nx">json</span><span class="p">.</span><span class="nx">map</span><span class="p">(</span> <span class="nf">(row) -&gt;</span> <span class="nx">row</span><span class="p">.</span><span class="nx">length</span> <span class="p">)</span>
       <span class="nv">sz = </span><span class="nb">Math</span><span class="p">.</span><span class="nx">pow</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="nb">Math</span><span class="p">.</span><span class="nx">ceil</span><span class="p">(</span><span class="nb">Math</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nb">Math</span><span class="p">.</span><span class="nx">max</span><span class="p">(</span><span class="nx">dims</span><span class="p">...))</span> <span class="o">/</span> <span class="nb">Math</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="mi">2</span><span class="p">)))</span>
@@ -53,30 +70,23 @@
           <span class="nx">_</span><span class="p">.</span><span class="nx">map</span> <span class="p">[</span><span class="mi">1</span><span class="p">..</span><span class="nx">sz</span><span class="p">],</span> <span class="o">-&gt;</span> <span class="mi">0</span>
         <span class="p">)</span>
       <span class="k">if</span> <span class="nx">json</span><span class="p">.</span><span class="nx">length</span> <span class="o">is</span> <span class="mi">1</span>
-        <span class="k">if</span> <span class="nx">json</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span> <span class="k">instanceof</span> <span class="nx">Cell</span>
-          <span class="nx">json</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span>
-        <span class="k">else</span> <span class="k">if</span> <span class="nx">json</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span> <span class="o">is</span> <span class="mi">0</span>
-          <span class="nx">Cell</span><span class="p">.</span><span class="nx">Dead</span>
-        <span class="k">else</span> <span class="k">if</span> <span class="nx">json</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span> <span class="o">is</span> <span class="mi">1</span>
-          <span class="nx">Cell</span><span class="p">.</span><span class="nx">Alive</span>
-        <span class="k">else</span>
-          <span class="k">throw</span> <span class="s1">&#39;a 1x1 square must contain a zero, one, or Cell&#39;</span>
+        <span class="nx">Cell</span><span class="p">.</span><span class="nx">from_json</span><span class="p">(</span><span class="nx">json</span><span class="p">)</span>
       <span class="k">else</span>
         <span class="nv">half_length = </span><span class="nx">json</span><span class="p">.</span><span class="nx">length</span> <span class="err">/ 2</span>
         <span class="nx">Square</span><span class="p">.</span><span class="k">for</span>
-          <span class="nv">nw: </span><span class="nx">@from_json</span><span class="p">(</span>
+          <span class="nv">nw: </span><span class="nx">Square</span><span class="p">.</span><span class="nx">from_json</span><span class="p">(</span>
             <span class="nx">json</span><span class="p">.</span><span class="nx">slice</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="nx">half_length</span><span class="p">).</span><span class="nx">map</span> <span class="nf">(row) -&gt;</span>
               <span class="nx">row</span><span class="p">.</span><span class="nx">slice</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="nx">half_length</span><span class="p">)</span>
           <span class="p">)</span>
-          <span class="nv">ne: </span><span class="nx">@from_json</span><span class="p">(</span>
+          <span class="nv">ne: </span><span class="nx">Square</span><span class="p">.</span><span class="nx">from_json</span><span class="p">(</span>
             <span class="nx">json</span><span class="p">.</span><span class="nx">slice</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="nx">half_length</span><span class="p">).</span><span class="nx">map</span> <span class="nf">(row) -&gt;</span>
               <span class="nx">row</span><span class="p">.</span><span class="nx">slice</span><span class="p">(</span><span class="nx">half_length</span><span class="p">)</span>
           <span class="p">)</span>
-          <span class="nv">se: </span><span class="nx">@from_json</span><span class="p">(</span>
+          <span class="nv">se: </span><span class="nx">Square</span><span class="p">.</span><span class="nx">from_json</span><span class="p">(</span>
             <span class="nx">json</span><span class="p">.</span><span class="nx">slice</span><span class="p">(</span><span class="nx">half_length</span><span class="p">).</span><span class="nx">map</span> <span class="nf">(row) -&gt;</span>
               <span class="nx">row</span><span class="p">.</span><span class="nx">slice</span><span class="p">(</span><span class="nx">half_length</span><span class="p">)</span>
           <span class="p">)</span>
-          <span class="nv">sw: </span><span class="nx">@from_json</span><span class="p">(</span>
+          <span class="nv">sw: </span><span class="nx">Square</span><span class="p">.</span><span class="nx">from_json</span><span class="p">(</span>
             <span class="nx">json</span><span class="p">.</span><span class="nx">slice</span><span class="p">(</span><span class="nx">half_length</span><span class="p">).</span><span class="nx">map</span> <span class="nf">(row) -&gt;</span>
               <span class="nx">row</span><span class="p">.</span><span class="nx">slice</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="nx">half_length</span><span class="p">)</span>
           <span class="p">)</span></pre></div>             </td>           </tr>                               <tr id="section-5">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-5">&#182;</a>               </div>               <h3>Padding and cropping squares</h3>
@@ -105,9 +115,8 @@ live cells.</p>             </td>             <td class="code">               <d
           <span class="nv">sw: </span><span class="nx">@sw</span><span class="p">.</span><span class="nx">ne</span>
         <span class="p">.</span><span class="nx">trim</span><span class="p">()</span>
       <span class="k">else</span>
-        <span class="k">this</span></pre></div>             </td>           </tr>                               <tr id="section-6">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-6">&#182;</a>               </div>               <h3>Querying squares</h3>             </td>             <td class="code">               <div class="highlight"><pre>  <span class="nx">YouAreDaChef</span><span class="p">(</span><span class="nx">Cell</span><span class="p">)</span>
-    <span class="p">.</span><span class="nx">after</span> <span class="s1">&#39;initialize&#39;</span><span class="p">,</span> <span class="o">-&gt;</span>
-      <span class="vi">@population = </span><span class="nx">@value</span>
+        <span class="k">this</span></pre></div>             </td>           </tr>                               <tr id="section-6">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-6">&#182;</a>               </div>               <h3>Querying squares</h3>             </td>             <td class="code">               <div class="highlight"><pre>  <span class="nv">Cell.Dead.population = </span><span class="mi">0</span>
+  <span class="nv">Cell.Alive.population = </span><span class="mi">1</span>
 
   <span class="nx">YouAreDaChef</span><span class="p">(</span><span class="nx">Square</span><span class="p">)</span>
     <span class="p">.</span><span class="nx">after</span> <span class="s1">&#39;initialize&#39;</span><span class="p">,</span> <span class="o">-&gt;</span>
