@@ -23,8 +23,9 @@ largest squares that aren't in use.</p>             </td>             <td class=
   <span class="nv">counter = </span><span class="mi">1</span> <span class="c1"># Cell.Alive.value</span>
 
   <span class="nx">YouAreDaChef</span><span class="p">(</span><span class="nx">Square</span><span class="p">)</span>
-    <span class="p">.</span><span class="nx">after</span> <span class="s1">&#39;initialize&#39;</span><span class="p">,</span> <span class="o">-&gt;</span>
-      <span class="vi">@value = </span><span class="p">(</span><span class="nx">counter</span> <span class="o">+=</span> <span class="mi">1</span><span class="p">)</span>
+    <span class="p">.</span><span class="nx">after</span> <span class="s1">&#39;initialize&#39;</span><span class="p">,</span> 
+      <span class="nv">canonicalization: </span><span class="o">-&gt;</span>
+        <span class="vi">@value = </span><span class="p">(</span><span class="nx">counter</span> <span class="o">+=</span> <span class="mi">1</span><span class="p">)</span>
 
   <span class="nv">_for = </span><span class="nx">Square</span><span class="p">.</span><span class="k">for</span>
 

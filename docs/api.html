@@ -97,10 +97,11 @@ live cells.</p>             </td>             <td class="code">               <d
       <span class="nx">@value</span> <span class="o">is</span> <span class="mi">0</span>
 
   <span class="nx">YouAreDaChef</span><span class="p">(</span><span class="nx">Square</span><span class="p">)</span>
-    <span class="p">.</span><span class="nx">after</span> <span class="s1">&#39;initialize&#39;</span><span class="p">,</span> <span class="o">-&gt;</span>
-      <span class="vi">@isEmpty = </span><span class="nx">_</span><span class="p">.</span><span class="nx">memoize</span><span class="p">(</span> <span class="o">-&gt;</span>
-        <span class="p">(</span><span class="nx">@nw</span> <span class="o">is</span> <span class="nx">@ne</span> <span class="o">is</span> <span class="nx">@se</span> <span class="o">is</span> <span class="nx">@sw</span><span class="p">)</span> <span class="o">and</span> <span class="nx">@nw</span><span class="p">.</span><span class="nx">isEmpty</span><span class="p">()</span>
-      <span class="p">)</span>
+    <span class="p">.</span><span class="nx">after</span> <span class="s1">&#39;initialize&#39;</span><span class="p">,</span>
+      <span class="nv">api: </span><span class="o">-&gt;</span>
+        <span class="vi">@isEmpty = </span><span class="nx">_</span><span class="p">.</span><span class="nx">memoize</span><span class="p">(</span> <span class="o">-&gt;</span>
+          <span class="p">(</span><span class="nx">@nw</span> <span class="o">is</span> <span class="nx">@ne</span> <span class="o">is</span> <span class="nx">@se</span> <span class="o">is</span> <span class="nx">@sw</span><span class="p">)</span> <span class="o">and</span> <span class="nx">@nw</span><span class="p">.</span><span class="nx">isEmpty</span><span class="p">()</span>
+        <span class="p">)</span>
 
   <span class="nx">_</span><span class="p">.</span><span class="nx">extend</span> <span class="nx">Square</span><span class="p">.</span><span class="nx">prototype</span><span class="p">,</span>
     <span class="nv">trim: </span><span class="o">-&gt;</span>
@@ -119,8 +120,9 @@ live cells.</p>             </td>             <td class="code">               <d
   <span class="nv">Cell.Alive.population = </span><span class="mi">1</span>
 
   <span class="nx">YouAreDaChef</span><span class="p">(</span><span class="nx">Square</span><span class="p">)</span>
-    <span class="p">.</span><span class="nx">after</span> <span class="s1">&#39;initialize&#39;</span><span class="p">,</span> <span class="o">-&gt;</span>
-      <span class="vi">@population = </span><span class="nx">@nw</span><span class="p">.</span><span class="nx">population</span> <span class="o">+</span> <span class="nx">@ne</span><span class="p">.</span><span class="nx">population</span> <span class="o">+</span> <span class="nx">@se</span><span class="p">.</span><span class="nx">population</span> <span class="o">+</span> <span class="nx">@sw</span><span class="p">.</span><span class="nx">population</span></pre></div>             </td>           </tr>                               <tr id="section-7">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-7">&#182;</a>               </div>               <hr />
+    <span class="p">.</span><span class="nx">after</span> <span class="s1">&#39;initialize&#39;</span><span class="p">,</span>
+      <span class="nv">api: </span><span class="o">-&gt;</span>
+        <span class="vi">@population = </span><span class="nx">@nw</span><span class="p">.</span><span class="nx">population</span> <span class="o">+</span> <span class="nx">@ne</span><span class="p">.</span><span class="nx">population</span> <span class="o">+</span> <span class="nx">@se</span><span class="p">.</span><span class="nx">population</span> <span class="o">+</span> <span class="nx">@sw</span><span class="p">.</span><span class="nx">population</span></pre></div>             </td>           </tr>                               <tr id="section-7">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-7">&#182;</a>               </div>               <hr />
 
 <p><strong>(c) 2012 <a href="http://braythwayt.com">Reg Braithwaite</a></strong> (<a href="http://twitter.com/raganwald">@raganwald</a>)</p>
 

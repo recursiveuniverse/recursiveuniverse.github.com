@@ -48,8 +48,9 @@ exports ?= window or this
 exports.mixInto = ({Square, Cell}) ->
 
   YouAreDaChef(Square)
-    .after 'initialize', ->
-      @memoized = {}
+    .after 'initialize', 
+      memoization: ->
+        @memoized = {}
 
   Square::get_memo = (index) ->
     @memoized[index]
@@ -60,7 +61,7 @@ exports.mixInto = ({Square, Cell}) ->
   memoize = (clazz, names...) ->
     for name in names
       do (name) ->
-        method_body = clazz.prototype[name]
+        method_body = clazz.prototype[name] #FIXME is this broken now that the method_body has been monekeyed about
         clazz.prototype[name] = (args...) ->
           index = name + _.map( args, (arg) -> "_#{arg}" ).join('')
           @get_memo(index) or @set_memo(index, method_body.call(this, args...))

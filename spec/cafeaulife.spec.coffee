@@ -4,23 +4,20 @@ require 'UnderscoreMatchersForJasmine'
 # YouAreDaChef provides a nice clean set of semantics for AOP
 YouAreDaChef = require('YouAreDaChef').YouAreDaChef
 
-Life = require('../lib/cafeaulife')
-Life.set_universe_rules()
+Life = require('../lib/cafeaulife').set_universe_rules()
 
 # An id for debugging purposes
 debug_id = 0
 YouAreDaChef(Life.Square)
-  .after 'initialize', ->
-    @debug_id = (debug_id += 1)
+  .after 'initialize',
+    'cafeaulife.spec': ->
+      @debug_id = (debug_id += 1)
 
 describe 'cafe au life', ->
 
-  beforeEach ->
-    Life.set_universe_rules()
-
   describe '_.memoize', ->
 
-    it 'gratuitously re-result the same thing many times', ->
+    it 'should gratuitously re-result the same thing many times', ->
 
       sq = Life.Square.from_json([
         [0, 0, 0, 0, 0, 0, 0, 0]

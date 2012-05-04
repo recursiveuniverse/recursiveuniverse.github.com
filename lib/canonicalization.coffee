@@ -37,8 +37,9 @@ exports.mixInto = ({Square, Cell}) ->
   counter = 1 # Cell.Alive.value
 
   YouAreDaChef(Square)
-    .after 'initialize', ->
-      @value = (counter += 1)
+    .after 'initialize', 
+      canonicalization: ->
+        @value = (counter += 1)
 
   _for = Square.for
 

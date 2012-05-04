@@ -98,15 +98,18 @@ on the fly. And we never garbage collect cells, level 1, or level 2 squares (the
 
 <p>We take advantage of the way <code>Square.RecursivelyComputable</code> is factored to introduce reference
 counting and add methods to remove a recursively computable square from the cache.</p>             </td>             <td class="code">               <div class="highlight"><pre>  <span class="nx">YouAreDaChef</span><span class="p">(</span><span class="nx">Square</span><span class="p">)</span>
-    <span class="p">.</span><span class="nx">after</span> <span class="s1">&#39;initialize&#39;</span><span class="p">,</span> <span class="o">-&gt;</span>
-      <span class="vi">@references = </span><span class="mi">0</span>
+    <span class="p">.</span><span class="nx">after</span> <span class="s1">&#39;initialize&#39;</span><span class="p">,</span>
+      <span class="nv">gc: </span><span class="o">-&gt;</span>
+        <span class="vi">@references = </span><span class="mi">0</span>
 
   <span class="nx">YouAreDaChef</span><span class="p">(</span><span class="nx">Square</span><span class="p">.</span><span class="nx">RecursivelyComputable</span><span class="p">)</span>
-    <span class="p">.</span><span class="nx">before</span> <span class="s1">&#39;set_memo&#39;</span><span class="p">,</span> <span class="nf">(index) -&gt;</span>
-      <span class="k">if</span> <span class="p">(</span><span class="nv">existing = </span><span class="nx">@get_memo</span><span class="p">(</span><span class="nx">index</span><span class="p">))</span>
-        <span class="nx">existing</span><span class="p">.</span><span class="nx">decrementReference</span><span class="p">()</span>
-    <span class="p">.</span><span class="nx">after</span> <span class="s1">&#39;set_memo&#39;</span><span class="p">,</span> <span class="nf">(index, square) -&gt;</span>
-      <span class="nx">square</span><span class="p">.</span><span class="nx">incrementReference</span><span class="p">()</span>
+    <span class="p">.</span><span class="nx">before</span> <span class="s1">&#39;set_memo&#39;</span><span class="p">,</span>
+      <span class="nv">gc: </span><span class="nf">(index) -&gt;</span>
+        <span class="k">if</span> <span class="p">(</span><span class="nv">existing = </span><span class="nx">@get_memo</span><span class="p">(</span><span class="nx">index</span><span class="p">))</span>
+          <span class="nx">existing</span><span class="p">.</span><span class="nx">decrementReference</span><span class="p">()</span>
+    <span class="p">.</span><span class="nx">after</span> <span class="s1">&#39;set_memo&#39;</span><span class="p">,</span>
+      <span class="nv">gc: </span><span class="nf">(index, square) -&gt;</span>
+        <span class="nx">square</span><span class="p">.</span><span class="nx">incrementReference</span><span class="p">()</span>
 
   <span class="nx">_</span><span class="p">.</span><span class="nx">extend</span> <span class="nx">Square</span><span class="p">.</span><span class="nx">RecursivelyComputable</span><span class="p">.</span><span class="nx">prototype</span><span class="p">,</span>
     <span class="nv">has_references: </span><span class="o">-&gt;</span>

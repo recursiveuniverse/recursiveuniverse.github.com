@@ -38,8 +38,9 @@ square, by dint of being its quadrants or result at any time in the future.</p> 
 <span class="nv">exports.mixInto = </span><span class="nf">({Square, Cell}) -&gt;</span>
 
   <span class="nx">YouAreDaChef</span><span class="p">(</span><span class="nx">Square</span><span class="p">)</span>
-    <span class="p">.</span><span class="nx">after</span> <span class="s1">&#39;initialize&#39;</span><span class="p">,</span> <span class="o">-&gt;</span>
-      <span class="vi">@memoized = </span><span class="p">{}</span>
+    <span class="p">.</span><span class="nx">after</span> <span class="s1">&#39;initialize&#39;</span><span class="p">,</span> 
+      <span class="nv">memoization: </span><span class="o">-&gt;</span>
+        <span class="vi">@memoized = </span><span class="p">{}</span>
 
   <span class="nv">Square::get_memo = </span><span class="nf">(index) -&gt;</span>
     <span class="nx">@memoized</span><span class="p">[</span><span class="nx">index</span><span class="p">]</span>
@@ -50,7 +51,7 @@ square, by dint of being its quadrants or result at any time in the future.</p> 
   <span class="nv">memoize = </span><span class="nf">(clazz, names...) -&gt;</span>
     <span class="k">for</span> <span class="nx">name</span> <span class="k">in</span> <span class="nx">names</span>
       <span class="nx">do</span> <span class="nf">(name) -&gt;</span>
-        <span class="nv">method_body = </span><span class="nx">clazz</span><span class="p">.</span><span class="nx">prototype</span><span class="p">[</span><span class="nx">name</span><span class="p">]</span>
+        <span class="nv">method_body = </span><span class="nx">clazz</span><span class="p">.</span><span class="nx">prototype</span><span class="p">[</span><span class="nx">name</span><span class="p">]</span> <span class="c1">#FIXME is this broken now that the method_body has been monekeyed about</span>
         <span class="nx">clazz</span><span class="p">.</span><span class="nx">prototype</span><span class="p">[</span><span class="nx">name</span><span class="p">]</span> <span class="o">=</span> <span class="nf">(args...) -&gt;</span>
           <span class="nv">index = </span><span class="nx">name</span> <span class="o">+</span> <span class="nx">_</span><span class="p">.</span><span class="nx">map</span><span class="p">(</span> <span class="nx">args</span><span class="p">,</span> <span class="nf">(arg) -&gt;</span> <span class="s2">&quot;_#{arg}&quot;</span> <span class="p">).</span><span class="nx">join</span><span class="p">(</span><span class="s1">&#39;&#39;</span><span class="p">)</span>
           <span class="nx">@get_memo</span><span class="p">(</span><span class="nx">index</span><span class="p">)</span> <span class="o">or</span> <span class="nx">@set_memo</span><span class="p">(</span><span class="nx">index</span><span class="p">,</span> <span class="nx">method_body</span><span class="p">.</span><span class="nx">call</span><span class="p">(</span><span class="k">this</span><span class="p">,</span> <span class="nx">args</span><span class="p">...))</span>

@@ -115,15 +115,18 @@ exports.mixInto = ({Square, Cell}) ->
   # We take advantage of the way `Square.RecursivelyComputable` is factored to introduce reference
   # counting and add methods to remove a recursively computable square from the cache.
   YouAreDaChef(Square)
-    .after 'initialize', ->
-      @references = 0
+    .after 'initialize',
+      gc: ->
+        @references = 0
 
   YouAreDaChef(Square.RecursivelyComputable)
-    .before 'set_memo', (index) ->
-      if (existing = @get_memo(index))
-        existing.decrementReference()
-    .after 'set_memo', (index, square) ->
-      square.incrementReference()
+    .before 'set_memo',
+      gc: (index) ->
+        if (existing = @get_memo(index))
+          existing.decrementReference()
+    .after 'set_memo',
+      gc: (index, square) ->
+        square.incrementReference()
 
   _.extend Square.RecursivelyComputable.prototype,
     has_references: ->

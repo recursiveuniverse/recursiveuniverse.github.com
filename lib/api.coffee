@@ -111,10 +111,11 @@ exports.mixInto = ({Square, Cell}) ->
       @value is 0
 
   YouAreDaChef(Square)
-    .after 'initialize', ->
-      @isEmpty = _.memoize( ->
-        (@nw is @ne is @se is @sw) and @nw.isEmpty()
-      )
+    .after 'initialize',
+      api: ->
+        @isEmpty = _.memoize( ->
+          (@nw is @ne is @se is @sw) and @nw.isEmpty()
+        )
 
   _.extend Square.prototype,
     trim: ->
@@ -136,8 +137,9 @@ exports.mixInto = ({Square, Cell}) ->
   Cell.Alive.population = 1
 
   YouAreDaChef(Square)
-    .after 'initialize', ->
-      @population = @nw.population + @ne.population + @se.population + @sw.population
+    .after 'initialize',
+      api: ->
+        @population = @nw.population + @ne.population + @se.population + @sw.population
 
 # ---
 #
