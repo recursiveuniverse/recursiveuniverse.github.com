@@ -32,7 +32,7 @@
 
 # ### Baseline Setup
 _ = require('underscore')
-YouAreDaChef = require('YouAreDaChef').YouAreDaChef
+{YouAreDaChef} = require('YouAreDaChef')
 exports ?= window or this
 
 exports.mixInto = ({Square, Cell}) ->
@@ -114,22 +114,10 @@ exports.mixInto = ({Square, Cell}) ->
   #
   # We take advantage of the way `Square.RecursivelyComputable` is factored to introduce reference
   # counting and add methods to remove a recursively computable square from the cache.
-  YouAreDaChef(Square)
-    .namespace('gc')
-    .after
-      initialize : ->
-        @references = 0
-
-  YouAreDaChef(Square.RecursivelyComputable)
-    .namespace('gc')
-    .before
-      set_memo: (index) ->
-        if (existing = @get_memo(index))
-          existing.decrementReference()
-    .after
-      set_memo: (index, square) ->
-        square.incrementReference()
-    .default
+  YouAreDaChef
+  .tag('gc')
+    .for(Square)
+    .def
       has_references: ->
         @references > 0
       has_no_references: ->
@@ -162,6 +150,15 @@ exports.mixInto = ({Square, Cell}) ->
           _.each @children(), (v) ->
             v.decrementReference()
             v.removeRecursively()
+    .before
+      set_memo: (index) ->
+        if (existing = @get_memo(index))
+          existing.decrementReference()
+    .after
+      initialize : ->
+        @references = 0
+      set_memo: (index, square) ->
+        square.incrementReference()
 
 
   # ### Naïve Garbage Collection

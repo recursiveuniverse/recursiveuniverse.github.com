@@ -22,7 +22,7 @@
 
 # ### Baseline Setup
 _ = require('underscore')
-YouAreDaChef = require('YouAreDaChef').YouAreDaChef
+{YouAreDaChef} = require('YouAreDaChef')
 exports ?= window or this
 
 # ### Implementing the cache
@@ -36,11 +36,12 @@ exports.mixInto = ({Square, Cell}) ->
 
   counter = 1 # Cell.Alive.value
 
-  YouAreDaChef(Square)
-    .namespace('canonicalization')
-    .after
-      initialize: ->
-        @value = (counter += 1)
+  YouAreDaChef
+  .tag('canonicalization')
+    .for(Square)
+      .after
+        initialize: ->
+          @value = (counter += 1)
 
   _for = Square.for
 

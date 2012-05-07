@@ -32,21 +32,22 @@ you would use something like;</p>
 <p>However, rolling our own memoization infrastructure allows us to construct
 the <code>children</code> method that shows us which squares are logically related to any given
 square, by dint of being its quadrants or result at any time in the future.</p>             </td>             <td class="code">               <div class="highlight"><pre></pre></div>             </td>           </tr>                               <tr id="section-3">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-3">&#182;</a>               </div>               <h3>Baseline Setup</h3>             </td>             <td class="code">               <div class="highlight"><pre><span class="nv">_ = </span><span class="nx">require</span><span class="p">(</span><span class="s1">&#39;underscore&#39;</span><span class="p">)</span>
-<span class="nv">YouAreDaChef = </span><span class="nx">require</span><span class="p">(</span><span class="s1">&#39;YouAreDaChef&#39;</span><span class="p">).</span><span class="nx">YouAreDaChef</span>
+<span class="p">{</span><span class="nx">YouAreDaChef</span><span class="p">}</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="s1">&#39;YouAreDaChef&#39;</span><span class="p">)</span>
 <span class="nx">exports</span> <span class="o">?=</span> <span class="nb">window</span> <span class="o">or</span> <span class="k">this</span>
 
 <span class="nv">exports.mixInto = </span><span class="nf">({Square, Cell}) -&gt;</span>
 
-  <span class="nx">YouAreDaChef</span><span class="p">(</span><span class="nx">Square</span><span class="p">)</span>
-    <span class="p">.</span><span class="nx">after</span> <span class="s1">&#39;initialize&#39;</span><span class="p">,</span> 
-      <span class="nv">memoization: </span><span class="o">-&gt;</span>
-        <span class="vi">@memoized = </span><span class="p">{}</span>
-
-  <span class="nv">Square::get_memo = </span><span class="nf">(index) -&gt;</span>
-    <span class="nx">@memoized</span><span class="p">[</span><span class="nx">index</span><span class="p">]</span>
-
-  <span class="nv">Square::set_memo = </span><span class="nf">(index, square) -&gt;</span>
-    <span class="nx">@memoized</span><span class="p">[</span><span class="nx">index</span><span class="p">]</span> <span class="o">=</span> <span class="nx">square</span>
+  <span class="nx">YouAreDaChef</span>
+    <span class="p">.</span><span class="nx">tag</span><span class="p">(</span><span class="s1">&#39;memoization&#39;</span><span class="p">)</span>
+    <span class="p">.</span><span class="k">for</span><span class="p">(</span><span class="nx">Square</span><span class="p">)</span>
+      <span class="p">.</span><span class="nx">def</span>
+        <span class="nv">get_memo: </span><span class="nf">(index) -&gt;</span>
+          <span class="nx">@memoized</span><span class="p">[</span><span class="nx">index</span><span class="p">]</span>
+        <span class="nv">set_memo: </span><span class="nf">(index, square) -&gt;</span>
+          <span class="nx">@memoized</span><span class="p">[</span><span class="nx">index</span><span class="p">]</span> <span class="o">=</span> <span class="nx">square</span>
+      <span class="p">.</span><span class="nx">after</span>
+        <span class="nv">initialize: </span><span class="o">-&gt;</span>
+          <span class="vi">@memoized = </span><span class="p">{}</span>
 
   <span class="nv">memoize = </span><span class="nf">(clazz, names...) -&gt;</span>
     <span class="k">for</span> <span class="nx">name</span> <span class="k">in</span> <span class="nx">names</span>
