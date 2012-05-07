@@ -48,15 +48,15 @@ exports ?= window or this
 exports.mixInto = ({Square, Cell}) ->
 
   YouAreDaChef(Square)
-    .after 'initialize', 
-      memoization: ->
+    .namespace('memoization')
+    .after
+      initialize: ->
         @memoized = {}
-
-  Square::get_memo = (index) ->
-    @memoized[index]
-
-  Square::set_memo = (index, square) ->
-    @memoized[index] = square
+    .default
+      get_memo: (index) ->
+        @memoized[index]
+      set_memo: (index, square) ->
+        @memoized[index] = square
 
   memoize = (clazz, names...) ->
     for name in names

@@ -115,52 +115,53 @@ exports.mixInto = ({Square, Cell}) ->
   # We take advantage of the way `Square.RecursivelyComputable` is factored to introduce reference
   # counting and add methods to remove a recursively computable square from the cache.
   YouAreDaChef(Square)
-    .after 'initialize',
-      gc: ->
+    .namespace('gc')
+    .after
+      initialize : ->
         @references = 0
 
   YouAreDaChef(Square.RecursivelyComputable)
-    .before 'set_memo',
-      gc: (index) ->
+    .namespace('gc')
+    .before
+      set_memo: (index) ->
         if (existing = @get_memo(index))
           existing.decrementReference()
-    .after 'set_memo',
-      gc: (index, square) ->
+    .after
+      set_memo: (index, square) ->
         square.incrementReference()
+    .default
+      has_references: ->
+        @references > 0
+      has_no_references: ->
+        @references is 0
+      has_one_reference: ->
+        @references is 1
+      has_many_references: ->
+        @references > 1
+      incrementReference: ->
+        throw "incrementReference!? #{@references}" unless @references >= 0
+        @references += 1
+        this
+      decrementReference: ->
+        throw "decrementReference!?" unless @references > 0
+        @references -= 1
+        this
 
-  _.extend Square.RecursivelyComputable.prototype,
-    has_references: ->
-      @references > 0
-    has_no_references: ->
-      @references is 0
-    has_one_reference: ->
-      @references is 1
-    has_many_references: ->
-      @references > 1
-    incrementReference: ->
-      throw "incrementReference!? #{@references}" unless @references >= 0
-      @references += 1
-      this
-    decrementReference: ->
-      throw "decrementReference!?" unless @references > 0
-      @references -= 1
-      this
+      children: ->
+        _.extend {nw: @nw, ne: @ne, se: @se, sw: @sw}, @memoized
 
-    children: ->
-      _.extend {nw: @nw, ne: @ne, se: @se, sw: @sw}, @memoized
+      remove: ->
+        if @references is 0
+          Square.cache.remove(this)
+          _.each @children(), (v) ->
+            v.decrementReference()
 
-    remove: ->
-      if @references is 0
-        Square.cache.remove(this)
-        _.each @children(), (v) ->
-          v.decrementReference()
-
-    removeRecursively: ->
-      if @references is 0
-        Square.cache.remove(this)
-        _.each @children(), (v) ->
-          v.decrementReference()
-          v.removeRecursively()
+      removeRecursively: ->
+        if @references is 0
+          Square.cache.remove(this)
+          _.each @children(), (v) ->
+            v.decrementReference()
+            v.removeRecursively()
 
 
   # ### Naïve Garbage Collection
