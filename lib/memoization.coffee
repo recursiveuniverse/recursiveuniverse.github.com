@@ -47,9 +47,8 @@ exports ?= window or this
 
 exports.mixInto = ({Square, Cell}) ->
 
-  YouAreDaChef
-    .tag('memoization')
-    .for(Square)
+  YouAreDaChef('memoization')
+    .clazz(Square)
       .def
         get_memo: (index) ->
           @memoized[index]

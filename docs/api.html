@@ -6,15 +6,14 @@
 <span class="p">{</span><span class="nx">YouAreDaChef</span><span class="p">}</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="s1">&#39;YouAreDaChef&#39;</span><span class="p">)</span>
 <span class="nx">exports</span> <span class="o">?=</span> <span class="nb">window</span> <span class="o">or</span> <span class="k">this</span>
 
-<span class="nv">exports.mixInto = </span><span class="nf">({Square, Cell}) -&gt;</span></pre></div>             </td>           </tr>                               <tr id="section-3">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-3">&#182;</a>               </div>               <h3>Extracting matrices and strings from Cells and Squares</h3>             </td>             <td class="code">               <div class="highlight"><pre>  <span class="nx">YouAreDaChef</span>
-    <span class="p">.</span><span class="nx">tag</span><span class="p">(</span><span class="s1">&#39;api&#39;</span><span class="p">)</span>
-    <span class="p">.</span><span class="k">for</span><span class="p">(</span><span class="nx">Cell</span><span class="p">)</span>
+<span class="nv">exports.mixInto = </span><span class="nf">({Square, Cell}) -&gt;</span></pre></div>             </td>           </tr>                               <tr id="section-3">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-3">&#182;</a>               </div>               <h3>Extracting matrices and strings from Cells and Squares</h3>             </td>             <td class="code">               <div class="highlight"><pre>  <span class="nx">YouAreDaChef</span><span class="p">(</span><span class="s1">&#39;api&#39;</span><span class="p">)</span>
+    <span class="p">.</span><span class="nx">clazz</span><span class="p">(</span><span class="nx">Cell</span><span class="p">)</span>
       <span class="p">.</span><span class="nx">def</span>
         <span class="nv">to_json: </span><span class="o">-&gt;</span>
           <span class="p">[[</span><span class="nx">@value</span><span class="p">]]</span>
         <span class="nv">toString: </span><span class="o">-&gt;</span>
           <span class="s1">&#39;&#39;</span> <span class="o">+</span> <span class="nx">@value</span>
-    <span class="p">.</span><span class="k">for</span><span class="p">(</span><span class="nx">Square</span><span class="p">)</span>
+    <span class="p">.</span><span class="nx">clazz</span><span class="p">(</span><span class="nx">Square</span><span class="p">)</span>
       <span class="p">.</span><span class="nx">def</span>
         <span class="nv">to_json: </span><span class="o">-&gt;</span>
           <span class="nv">a =</span>
@@ -95,13 +94,12 @@
           <span class="p">)</span></pre></div>             </td>           </tr>                               <tr id="section-5">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-5">&#182;</a>               </div>               <h3>Padding and cropping squares</h3>
 
 <p>When displaying squares, it is convenient to crop them to the smallest square that contains
-live cells.</p>             </td>             <td class="code">               <div class="highlight"><pre>  <span class="nx">YouAreDaChef</span>
-    <span class="p">.</span><span class="nx">tag</span><span class="p">(</span><span class="s1">&#39;api&#39;</span><span class="p">)</span>
-    <span class="p">.</span><span class="k">for</span><span class="p">(</span><span class="nx">Cell</span><span class="p">)</span>
+live cells.</p>             </td>             <td class="code">               <div class="highlight"><pre>  <span class="nx">YouAreDaChef</span><span class="p">(</span><span class="s1">&#39;api&#39;</span><span class="p">)</span>
+    <span class="p">.</span><span class="nx">clazz</span><span class="p">(</span><span class="nx">Cell</span><span class="p">)</span>
       <span class="p">.</span><span class="nx">def</span>
         <span class="nv">isEmpty: </span><span class="o">-&gt;</span>
           <span class="nx">@value</span> <span class="o">is</span> <span class="mi">0</span>
-    <span class="p">.</span><span class="k">for</span><span class="p">(</span><span class="nx">Square</span><span class="p">)</span>
+    <span class="p">.</span><span class="nx">clazz</span><span class="p">(</span><span class="nx">Square</span><span class="p">)</span>
       <span class="p">.</span><span class="nx">def</span>
         <span class="nv">trim: </span><span class="o">-&gt;</span>
           <span class="k">if</span> <span class="nx">@nw</span><span class="o">?</span><span class="p">.</span><span class="nx">sw</span><span class="o">?</span><span class="p">.</span><span class="nx">isEmpty</span><span class="p">()</span> <span class="o">and</span> <span class="nx">@nw</span><span class="p">.</span><span class="nx">nw</span><span class="p">.</span><span class="nx">isEmpty</span><span class="p">()</span> <span class="o">and</span> <span class="nx">@nw</span><span class="p">.</span><span class="nx">ne</span><span class="p">.</span><span class="nx">isEmpty</span><span class="p">()</span> <span class="o">and</span> <span class="o">\</span>
@@ -123,9 +121,8 @@ live cells.</p>             </td>             <td class="code">               <d
           <span class="p">)</span></pre></div>             </td>           </tr>                               <tr id="section-6">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-6">&#182;</a>               </div>               <h3>Querying squares</h3>             </td>             <td class="code">               <div class="highlight"><pre>  <span class="nv">Cell.Dead.population = </span><span class="mi">0</span>
   <span class="nv">Cell.Alive.population = </span><span class="mi">1</span>
 
-  <span class="nx">YouAreDaChef</span>
-    <span class="p">.</span><span class="nx">tag</span><span class="p">(</span><span class="s1">&#39;api&#39;</span><span class="p">)</span>
-    <span class="p">.</span><span class="k">for</span><span class="p">(</span><span class="nx">Square</span><span class="p">)</span>
+  <span class="nx">YouAreDaChef</span><span class="p">(</span><span class="s1">&#39;api&#39;</span><span class="p">)</span>
+    <span class="p">.</span><span class="nx">clazz</span><span class="p">(</span><span class="nx">Square</span><span class="p">)</span>
       <span class="p">.</span><span class="nx">after</span>
         <span class="nv">initialize: </span><span class="o">-&gt;</span>
           <span class="vi">@population = </span><span class="nx">@nw</span><span class="p">.</span><span class="nx">population</span> <span class="o">+</span> <span class="nx">@ne</span><span class="p">.</span><span class="nx">population</span> <span class="o">+</span> <span class="nx">@se</span><span class="p">.</span><span class="nx">population</span> <span class="o">+</span> <span class="nx">@sw</span><span class="p">.</span><span class="nx">population</span></pre></div>             </td>           </tr>                               <tr id="section-7">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-7">&#182;</a>               </div>               <hr />

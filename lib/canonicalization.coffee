@@ -38,7 +38,7 @@ exports.mixInto = ({Square, Cell}) ->
 
   YouAreDaChef
   .tag('canonicalization')
-    .for(Square)
+    .clazz(Square)
       .after
         initialize: ->
           @value = (counter += 1)

@@ -13,12 +13,69 @@
 _ = require('underscore')
 exports ?= window or this
 
-exports.mixInto = ({Square, Cell}) ->
+# ### Setting the rules for this game's "Universe"
+#
+# There many possible games consisting of cellular automata arranged in a two-dimensional
+# matrix. Cafe au Life handles the "[life-like][ll]" ones, roughly those that have:
+#
+# [ll]: http://www.conwaylife.com/wiki/Cellular_automaton#Well-known_Life-like_cellular_automata
+#
+# * A stable 'quiescent' state. A universe full of empty cells will stay empty.
+# * Rules based only on the population of a cell's Moore Neighborhood: Every cell is affected by the population of its eight neighbours,
+#   and all eight neighbours are treated identically.
+# * Two states.
+#
+# Given a definition of the state machine for each cell, Cafe au Life performs all the necessary initialization to compute
+# the future of a pattern.
+#
+# The default, `set_universe_rules()`, is equivalent to `set_universe_rules([2,3],[3])`, which
+# invokes Conway's Game of Life, commonly written as 23/3. Other games can be invoked with their survival
+# and birth counts, e.g. `set_universe_rules([1,3,5,7], [1,3,5,7])` invokes [Replicator][replicator]
+#
+# [replicator]: http://www.conwaylife.com/wiki/Replicator_(CA)
+
+# First, here's a handy function for turning any array or object into a dictionary function.
+#
+# (see also: [Reusable Abstractions in CoffeeScript][reuse])
+#
+# [reuse]: https://github.com/raganwald/homoiconic/blob/master/2012/01/reuseable-abstractions.md#readme
+
+dfunc = (dictionary) ->
+  (indices...) ->
+    indices.reduce (a, i) ->
+      a[i]
+    , dictionary
+
+exports.mixInto = (life) ->
+
+  rule = null
+
+  life.set_universe_rules = (survival = [2,3], birth = [3]) ->
+
+    rule = dfunc [
+      (if birth.indexOf(x) >= 0 then Cell.Alive else Cell.Dead) for x in [0..9]
+      (if survival.indexOf(x) >= 0 then Cell.Alive else Cell.Dead) for x in [0..9]
+    ]
+
+    life
+
+  life.set_universe_rules unless _.isFunction(rule)
+
+  {Cell, Square} = life
 
   class Square.Smallest extends Square
 
   # A Seed knows how to calculate its own result from the rules
   class Square.Seed extends Square
+
+    @succ: (cells, row, col) ->
+      current_state = cells[row][col]
+      neighbour_count = cells[row-1][col-1] + cells[row-1][col] +
+        cells[row-1][col+1] + cells[row][col-1] +
+        cells[row][col+1] + cells[row+1][col-1] +
+        cells[row+1][col] + cells[row+1][col+1]
+      rule(current_state, neighbour_count)
+
     result: ->
       a = [
         [@nw.nw.value, @nw.ne.value, @ne.nw.value, @ne.ne.value]
@@ -27,10 +84,10 @@ exports.mixInto = ({Square, Cell}) ->
         [@sw.sw.value, @sw.se.value, @se.sw.value, @se.se.value]
       ]
       Square.for
-        nw: Square.succ(a, 1,1)
-        ne: Square.succ(a, 1,2)
-        se: Square.succ(a, 2,2)
-        sw: Square.succ(a, 2,1)
+        nw: Square.Seed.succ(a, 1,1)
+        ne: Square.Seed.succ(a, 1,2)
+        se: Square.Seed.succ(a, 2,2)
+        sw: Square.Seed.succ(a, 2,1)
 
   # ### Recap: Squares
   #

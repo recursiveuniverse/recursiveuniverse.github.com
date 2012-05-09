@@ -116,7 +116,7 @@ exports.mixInto = ({Square, Cell}) ->
   # counting and add methods to remove a recursively computable square from the cache.
   YouAreDaChef
   .tag('gc')
-    .for(Square)
+    .clazz(Square)
     .def
       has_references: ->
         @references > 0

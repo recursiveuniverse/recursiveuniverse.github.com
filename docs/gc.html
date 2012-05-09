@@ -99,7 +99,7 @@ on the fly. And we never garbage collect cells, level 1, or level 2 squares (the
 <p>We take advantage of the way <code>Square.RecursivelyComputable</code> is factored to introduce reference
 counting and add methods to remove a recursively computable square from the cache.</p>             </td>             <td class="code">               <div class="highlight"><pre>  <span class="nx">YouAreDaChef</span>
   <span class="p">.</span><span class="nx">tag</span><span class="p">(</span><span class="s1">&#39;gc&#39;</span><span class="p">)</span>
-    <span class="p">.</span><span class="k">for</span><span class="p">(</span><span class="nx">Square</span><span class="p">)</span>
+    <span class="p">.</span><span class="nx">clazz</span><span class="p">(</span><span class="nx">Square</span><span class="p">)</span>
     <span class="p">.</span><span class="nx">def</span>
       <span class="nv">has_references: </span><span class="o">-&gt;</span>
         <span class="nx">@references</span> <span class="o">&gt;</span> <span class="mi">0</span>

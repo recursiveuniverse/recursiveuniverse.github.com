@@ -74,69 +74,7 @@ class Square
   @for: (quadrants, creator = Square) ->
     new creator(quadrants)
 
-# ### Setting the rules for this game's "Universe"
-#
-# There many possible games consisting of cellular automata arranged in a two-dimensional
-# matrix. Cafe au Life handles the "[life-like][ll]" ones, roughly those that have:
-#
-# [ll]: http://www.conwaylife.com/wiki/Cellular_automaton#Well-known_Life-like_cellular_automata
-#
-# * A stable 'quiescent' state. A universe full of empty cells will stay empty.
-# * Rules based only on the population of a cell's Moore Neighborhood: Every cell is affected by the population of its eight neighbours,
-#   and all eight neighbours are treated identically.
-# * Two states.
-#
-# Given a definition of the state machine for each cell, Cafe au Life performs all the necessary initialization to compute
-# the future of a pattern.
-#
-# The default, `set_universe_rules()`, is equivalent to `set_universe_rules([2,3],[3])`, which
-# invokes Conway's Game of Life, commonly written as 23/3. Other games can be invoked with their survival
-# and birth counts, e.g. `set_universe_rules([1,3,5,7], [1,3,5,7])` invokes [Replicator][replicator]
-#
-# [replicator]: http://www.conwaylife.com/wiki/Replicator_(CA)
-
-# First, here's a handy function for turning any array or object into a dictionary function.
-#
-# (see also: [Reusable Abstractions in CoffeeScript][reuse])
-#
-# [reuse]: https://github.com/raganwald/homoiconic/blob/master/2012/01/reuseable-abstractions.md#readme
-
-dfunc = (dictionary) ->
-  (indices...) ->
-    indices.reduce (a, i) ->
-      a[i]
-    , dictionary
-
-# Next, a helper function that sets the rules for the current "game." Calling `set_universe_rules(...)` creates
-# a `succ` function that answers the successor cell given a matrix of cells. It doesn't operate directly
-# on squares or cells.
-
-set_universe_rules = (survival = [2,3], birth = [3]) ->
-
-  return exports if Square.current_rules?.toString() is {survival, birth}.toString()
-
-  Square.current_rules = {survival, birth}
-
-  rule = dfunc [
-    (if birth.indexOf(x) >= 0 then Cell.Alive else Cell.Dead) for x in [0..9]
-    (if survival.indexOf(x) >= 0 then Cell.Alive else Cell.Dead) for x in [0..9]
-  ]
-
-  Square.succ = (cells, row, col) ->
-    current_state = cells[row][col]
-    neighbour_count = cells[row-1][col-1] + cells[row-1][col] +
-      cells[row-1][col+1] + cells[row][col-1] +
-      cells[row][col+1] + cells[row+1][col-1] +
-      cells[row+1][col] + cells[row+1][col+1]
-    rule(current_state, neighbour_count)
-
-  exports
-
-# **Reminder**: the Universe module doesn't actually implement any computation of the future of a pattern, it simply
-# provides the `Square.succ` helper that the [Future] module uses. You could just as easily use this helper method to
-# construct a naïve algorithm.
-
-_.defaults exports, {Cell, Square, set_universe_rules}
+_.defaults exports, {Cell, Square}
 
 # ## The first time through
 #

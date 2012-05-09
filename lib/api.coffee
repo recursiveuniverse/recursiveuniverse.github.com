@@ -13,15 +13,14 @@ exports.mixInto = ({Square, Cell}) ->
 
   # ### Extracting matrices and strings from Cells and Squares
 
-  YouAreDaChef
-    .tag('api')
-    .for(Cell)
+  YouAreDaChef('api')
+    .clazz(Cell)
       .def
         to_json: ->
           [[@value]]
         toString: ->
           '' + @value
-    .for(Square)
+    .clazz(Square)
       .def
         to_json: ->
           a =
@@ -109,13 +108,12 @@ exports.mixInto = ({Square, Cell}) ->
   #
   # When displaying squares, it is convenient to crop them to the smallest square that contains
   # live cells.
-  YouAreDaChef
-    .tag('api')
-    .for(Cell)
+  YouAreDaChef('api')
+    .clazz(Cell)
       .def
         isEmpty: ->
           @value is 0
-    .for(Square)
+    .clazz(Square)
       .def
         trim: ->
           if @nw?.sw?.isEmpty() and @nw.nw.isEmpty() and @nw.ne.isEmpty() and \
@@ -140,9 +138,8 @@ exports.mixInto = ({Square, Cell}) ->
   Cell.Dead.population = 0
   Cell.Alive.population = 1
 
-  YouAreDaChef
-    .tag('api')
-    .for(Square)
+  YouAreDaChef('api')
+    .clazz(Square)
       .after
         initialize: ->
           @population = @nw.population + @ne.population + @se.population + @sw.population
