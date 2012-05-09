@@ -48,7 +48,7 @@ dfunc = (dictionary) ->
 
 exports.mixInto = (life) ->
 
-  rule = null
+  rule = (current_state, neighbour_count) -> throw 'call set_universe_rules(...) first'
 
   life.set_universe_rules = (survival = [2,3], birth = [3]) ->
 
@@ -58,8 +58,6 @@ exports.mixInto = (life) ->
     ]
 
     life
-
-  life.set_universe_rules unless _.isFunction(rule)
 
   {Cell, Square} = life
 

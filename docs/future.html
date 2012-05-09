@@ -33,7 +33,7 @@ and birth counts, e.g. <code>set_universe_rules([1,3,5,7], [1,3,5,7])</code> inv
 
 <span class="nv">exports.mixInto = </span><span class="nf">(life) -&gt;</span>
 
-  <span class="nv">rule = </span><span class="kc">null</span>
+  <span class="nv">rule = </span><span class="nf">(current_state, neighbour_count) -&gt;</span> <span class="k">throw</span> <span class="s1">&#39;call set_universe_rules(...) first&#39;</span>
 
   <span class="nv">life.set_universe_rules = </span><span class="nf">(survival = [2,3], birth = [3]) -&gt;</span>
 
@@ -43,8 +43,6 @@ and birth counts, e.g. <code>set_universe_rules([1,3,5,7], [1,3,5,7])</code> inv
     <span class="p">]</span>
 
     <span class="nx">life</span>
-
-  <span class="nx">life</span><span class="p">.</span><span class="nx">set_universe_rules</span> <span class="nx">unless</span> <span class="nx">_</span><span class="p">.</span><span class="nx">isFunction</span><span class="p">(</span><span class="nx">rule</span><span class="p">)</span>
 
   <span class="p">{</span><span class="nx">Cell</span><span class="p">,</span> <span class="nx">Square</span><span class="p">}</span> <span class="o">=</span> <span class="nx">life</span>
 
