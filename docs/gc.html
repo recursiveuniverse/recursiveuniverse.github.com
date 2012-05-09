@@ -97,8 +97,7 @@ on the fly. And we never garbage collect cells, level 1, or level 2 squares (the
     <span class="nv">removeRecursively: </span><span class="o">-&gt;</span></pre></div>             </td>           </tr>                               <tr id="section-5">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-5">&#182;</a>               </div>               <h3>Modifying <code>Square.RecursivelyComputable</code></h3>
 
 <p>We take advantage of the way <code>Square.RecursivelyComputable</code> is factored to introduce reference
-counting and add methods to remove a recursively computable square from the cache.</p>             </td>             <td class="code">               <div class="highlight"><pre>  <span class="nx">YouAreDaChef</span>
-  <span class="p">.</span><span class="nx">tag</span><span class="p">(</span><span class="s1">&#39;gc&#39;</span><span class="p">)</span>
+counting and add methods to remove a recursively computable square from the cache.</p>             </td>             <td class="code">               <div class="highlight"><pre>  <span class="nx">YouAreDaChef</span><span class="p">(</span><span class="s1">&#39;gc&#39;</span><span class="p">)</span>
     <span class="p">.</span><span class="nx">clazz</span><span class="p">(</span><span class="nx">Square</span><span class="p">)</span>
     <span class="p">.</span><span class="nx">def</span>
       <span class="nv">has_references: </span><span class="o">-&gt;</span>
@@ -133,15 +132,15 @@ counting and add methods to remove a recursively computable square from the cach
           <span class="nx">_</span><span class="p">.</span><span class="nx">each</span> <span class="nx">@children</span><span class="p">(),</span> <span class="nf">(v) -&gt;</span>
             <span class="nx">v</span><span class="p">.</span><span class="nx">decrementReference</span><span class="p">()</span>
             <span class="nx">v</span><span class="p">.</span><span class="nx">removeRecursively</span><span class="p">()</span>
-    <span class="p">.</span><span class="nx">before</span>
-      <span class="nv">set_memo: </span><span class="nf">(index) -&gt;</span>
-        <span class="k">if</span> <span class="p">(</span><span class="nv">existing = </span><span class="nx">@get_memo</span><span class="p">(</span><span class="nx">index</span><span class="p">))</span>
-          <span class="nx">existing</span><span class="p">.</span><span class="nx">decrementReference</span><span class="p">()</span>
-    <span class="p">.</span><span class="nx">after</span>
-      <span class="nv">initialize : </span><span class="o">-&gt;</span>
-        <span class="vi">@references = </span><span class="mi">0</span>
-      <span class="nv">set_memo: </span><span class="nf">(index, square) -&gt;</span>
-        <span class="nx">square</span><span class="p">.</span><span class="nx">incrementReference</span><span class="p">()</span></pre></div>             </td>           </tr>                               <tr id="section-6">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-6">&#182;</a>               </div>               <h3>Naïve Garbage Collection</h3>
+              <span class="p">.</span><span class="nx">method</span><span class="p">(</span><span class="s1">&#39;initialize&#39;</span><span class="p">)</span>
+                <span class="p">.</span><span class="nx">after</span> <span class="o">-&gt;</span>
+                  <span class="vi">@references = </span><span class="mi">0</span>
+              <span class="p">.</span><span class="nx">method</span><span class="p">(</span><span class="s1">&#39;set_memo&#39;</span><span class="p">)</span>
+                <span class="p">.</span><span class="nx">before</span> <span class="nf">(index) -&gt;</span>
+                  <span class="k">if</span> <span class="p">(</span><span class="nv">existing = </span><span class="nx">@get_memo</span><span class="p">(</span><span class="nx">index</span><span class="p">))</span>
+                    <span class="nx">existing</span><span class="p">.</span><span class="nx">decrementReference</span><span class="p">()</span>
+                <span class="p">.</span><span class="nx">after</span> <span class="nf">(index, square) -&gt;</span>
+                  <span class="nx">square</span><span class="p">.</span><span class="nx">incrementReference</span><span class="p">()</span></pre></div>             </td>           </tr>                               <tr id="section-6">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-6">&#182;</a>               </div>               <h3>Naïve Garbage Collection</h3>
 
 <p>Our GC is pretty bone-headed, it uses brute force to get a list of
 removeable squares, then marches through them from highest to lowest

@@ -57,8 +57,7 @@
 
 # Cafe au Life is divided into modules:
 #
-# * The [Universe Module][universe] introduces the `Cell` and `Square` classes that implement the [Quadtree](https://en.wikipedia.org/wiki/Quadtree), and it also
-#   provides a method for setting up the [rules][ll] of the Life universe.
+# * The [Universe Module][universe] introduces the `Cell` and `Square` classes that implement the [Quadtree](https://en.wikipedia.org/wiki/Quadtree).
 # * The [Future Module][future] provides methods for computing the future of a square in the [Quadtree](https://en.wikipedia.org/wiki/Quadtree), making full use of recursion.
 # * The [Canonicalization Module][canonicalization] implements a very naive hash-table for canoncial representations of squares. HashLife uses extensive
 # [canonicalization][canonical] to optimize the storage of very large patterns with repetitive components. Without the cache, the
@@ -120,9 +119,7 @@ _.defaults exports, universe
 #       With the future module removed, it should still use a [Quadtree](https://en.wikipedia.org/wiki/Quadtree), but not cache results and notlook more than one generation into the future.
 #       The [Quadtree](https://en.wikipedia.org/wiki/Quadtree) is then simply a space-saving measure.
 #
-# TODO: Allow futures, but move *memoization* of futures into its own module.
-#
-# TODO: Support changing the rules during a run. The Canonicalization Module will ahve to regenerate the cache.
+# TODO: Support changing the rules during a run. The Canonicalization Module will have to clear the cache.
 #
 # TODO: Decouple canonicalization so that it can work with or without the Canonicalization Module. If the Canonicalization Module is removed, it should work VERY slowly.
 

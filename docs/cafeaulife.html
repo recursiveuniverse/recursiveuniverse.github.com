@@ -43,8 +43,7 @@ performance in a JavaScript application will not be anything to write home about
 still incredible relative to brute force, which is a testimony of the importance of algorithms over implementations.</p>             </td>             <td class="code">               <div class="highlight"><pre></pre></div>             </td>           </tr>                               <tr id="section-4">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-4">&#182;</a>               </div>               <p>Cafe au Life is divided into modules:</p>
 
 <ul>
-<li>The <a href="http:universe.html">Universe Module</a> introduces the <code>Cell</code> and <code>Square</code> classes that implement the <a href="https://en.wikipedia.org/wiki/Quadtree">Quadtree</a>, and it also
-provides a method for setting up the <a href="http://www.conwaylife.com/wiki/Cellular_automaton#Well-known_Life-like_cellular_automata">rules</a> of the Life universe.</li>
+<li>The <a href="http:universe.html">Universe Module</a> introduces the <code>Cell</code> and <code>Square</code> classes that implement the <a href="https://en.wikipedia.org/wiki/Quadtree">Quadtree</a>.</li>
 <li>The <a href="http:future.html">Future Module</a> provides methods for computing the future of a square in the <a href="https://en.wikipedia.org/wiki/Quadtree">Quadtree</a>, making full use of recursion.</li>
 <li>The <a href="http:canonicalization.html">Canonicalization Module</a> implements a very naive hash-table for canoncial representations of squares. HashLife uses extensive
 <a href="https://en.wikipedia.org/wiki/Canonicalization">canonicalization</a> to optimize the storage of very large patterns with repetitive components. Without the cache, the
@@ -78,9 +77,7 @@ to understand the core algorithm for computing the future of a pattern. You can 
       With the future module removed, it should still use a <a href="https://en.wikipedia.org/wiki/Quadtree">Quadtree</a>, but not cache results and notlook more than one generation into the future.
       The <a href="https://en.wikipedia.org/wiki/Quadtree">Quadtree</a> is then simply a space-saving measure.</p>
 
-<p>TODO: Allow futures, but move <em>memoization</em> of futures into its own module.</p>
-
-<p>TODO: Support changing the rules during a run. The Canonicalization Module will ahve to regenerate the cache.</p>
+<p>TODO: Support changing the rules during a run. The Canonicalization Module will have to clear the cache.</p>
 
 <p>TODO: Decouple canonicalization so that it can work with or without the Canonicalization Module. If the Canonicalization Module is removed, it should work VERY slowly.</p>             </td>             <td class="code">               <div class="highlight"><pre></pre></div>             </td>           </tr>                               <tr id="section-7">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-7">&#182;</a>               </div>               <h2>Who</h2>
 
