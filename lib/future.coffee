@@ -568,7 +568,7 @@ exports.mixInto = (life) ->
 
     # Armed with this one additional function, we can write a general method for determining the result
     # of a square at an arbitrary point forward in time. Modulo some error checking, we check and see whether
-    # we are moving forward more or less than half as much as the maimum amount. If it's more than half, we
+    # we are moving forward more or less than half as much as the maximum amount. If it's more than half, we
     # start by generating the intermediate square from results. If it's less than half, we start by generating
     # the intermediate squre by cropping.
     #
