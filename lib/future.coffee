@@ -292,7 +292,7 @@ exports.mixInto = (life) ->
     #     sw        se
     #
     # Given that we know the result for each of those four squares, we can start building an intermediate result.
-    # The constructor for `IntermediateResult` takes a square and constructs th epieces of an intermediate square,
+    # The constructor for `IntermediateResult` takes a square and constructs the pieces of an intermediate square,
     # one that is half way between the level of the square and the level of the square's eventual result.
     #
     # We'll step through that process in the constructor piece by piece.
