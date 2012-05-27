@@ -623,8 +623,8 @@ exports.mixInto = (life) ->
   # ## Computing the future of a square
   #
   # Let's say we have a square and we wish to determine its future at time `t`.
-  # We calculate the smallest square that could possible contain its future, taking
-  # into account that the pattern in the square could grow once cell in each direction
+  # We calculate the smallest square that could possibly contain its future, taking
+  # into account that the pattern in the square could grow one cell in each direction
   # per generation.
   #
   # We take our square and 'pad' it with empty squares until it is large enough to
