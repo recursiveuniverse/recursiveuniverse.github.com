@@ -292,7 +292,7 @@ exports.mixInto = (life) ->
     #     sw        se
     #
     # Given that we know the result for each of those four squares, we can start building an intermediate result.
-    # The constructor for `IntermediateResult` takes a square and constructs th epieces of an intermediate square,
+    # The constructor for `IntermediateResult` takes a square and constructs the pieces of an intermediate square,
     # one that is half way between the level of the square and the level of the square's eventual result.
     #
     # We'll step through that process in the constructor piece by piece.
@@ -568,7 +568,7 @@ exports.mixInto = (life) ->
 
     # Armed with this one additional function, we can write a general method for determining the result
     # of a square at an arbitrary point forward in time. Modulo some error checking, we check and see whether
-    # we are moving forward more or less than half as much as the maimum amount. If it's more than half, we
+    # we are moving forward more or less than half as much as the maximum amount. If it's more than half, we
     # start by generating the intermediate square from results. If it's less than half, we start by generating
     # the intermediate squre by cropping.
     #
