@@ -10,11 +10,11 @@ Cafe au Life is an implementation of John Conway's [Game of Life][life] cellular
 [cs]: http://jashkenas.github.com/coffee-script/
 [node]: http://nodejs.org
 
-### If it doesn't produce an animated display, why should I care about it?
+### Why should I care?
 
 Cafe au Life implements Bill Gosper's [HashLife][hashlife] algorithm. HashLife exploits regularity, so for certain life patterns, it runs at super-linear speed. As [noted elsewhere][beautiful], if you set up Gosper's Glider Gun when the Earth was first formed 4.5 billion years ago, and ran one generation per second, in the 143.4 *quadrillion* seconds that have elapsed since then, the pattern would grow to 23,900,000,000,000,036 live cells. Cafe au Life takes just under two seconds to boot up, and another second to calculate the state of the pattern after 143.4 quadrillion generations.
 
-If you haven't seen how the algorithm works, you owe it to yourself to read the [annotated source code][source].
+If you haven't seen how the algorithm works, read the [annotated source code][source] and learn how the algorithm works.
 
 [source]: http://recursiveuniver.se/docs/cafeaulife.html
 [beautiful]: http://raganwald.posterous.com/a-beautiful-algorithm
@@ -22,7 +22,7 @@ If you haven't seen how the algorithm works, you owe it to yourself to read the 
 
 ### How can I try it?
 
-The easiest way to try Cafe au Life is to install CoffeeScript and node.js, clone the repository, then use the REPL from the command line:
+You can try Cafe au Life: Install CoffeeScript and node.js, clone the repository, then use the REPL from the command line:
 
 ```bash
 raganwald@Reginald-Braithwaites-iMac[cafeaulife (master)⚡] coffee
@@ -32,6 +32,8 @@ coffee> gun.future_at_time(143400000000000000).population
 23900000000000036
 coffee>
 ```
+
+You can also play with a browser-based version at [raganwald.com/hashlife](http:raganwald.com/hashlife).
 
 Have fun!
 
