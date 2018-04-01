@@ -1,4 +1,4 @@
-# This module is part of [recursiveuniver.se](http://recursiveuniver.se).
+# This module is part of [recursiveuniverse.github.com](http://recursiveuniverse.github.com).
 #
 # ## Garbage Collection Module
 #
