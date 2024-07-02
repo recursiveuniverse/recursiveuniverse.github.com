@@ -16,7 +16,7 @@ Cafe au Life implements Bill Gosper's [HashLife][hashlife] algorithm. HashLife e
 
 If you haven't seen how the algorithm works, read the [annotated source code][source] and learn how the algorithm works.
 
-[source]: http://recursiveuniverse.github.com/docs/cafeaulife.html
+[source]: http://recursiveuniverse.github.io/docs/cafeaulife.html
 [beautiful]: http://raganwald.posterous.com/a-beautiful-algorithm
 [hashlife]: http://en.wikipedia.org/wiki/Hashlife
 
@@ -76,5 +76,5 @@ Cafe au Life is freely distributable under the terms of the [MIT license](http:/
 
 The annotated source code was generated directly from the [original source][source] using [Docco][docco].
 
-[source]: https://github.com/recursiveuniverse/recursiveuniverse.github.com/blob/master/lib
+[source]: https://github.com/recursiveuniverse/recursiveuniverse.github.io/blob/master/lib
 [docco]: http://jashkenas.github.com/docco/

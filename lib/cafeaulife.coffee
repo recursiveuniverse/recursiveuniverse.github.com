@@ -6,7 +6,7 @@
 # written in [CoffeeScript][cs]. Cafe au Life runs on [Node.js][node], it is not designed
 # to run as an interactive program in a browser window.
 #
-# Cafe au Life's Github project is [here](https://github.com/recursiveuniverse/recursiveuniverse.github.com/).
+# Cafe au Life's Github project is [here](https://github.com/recursiveuniverse/recursiveuniverse.github.io/).
 #
 # This file, [cafeaulife.coffee][source] contains the core engine for computing the future of any life universe
 # of size `2^n | n > 1`. The algorithm is optimized for computing very large numbers of generations
@@ -33,7 +33,7 @@
 #
 # [ll]: http://www.conwaylife.com/wiki/Cellular_automaton#Well-known_Life-like_cellular_automata
 # [moore]: http://en.wikipedia.org/wiki/Moore_neighborhood
-# [source]: https://github.com/recursiveuniverse/recursiveuniverse.github.com/blob/master/lib
+# [source]: https://github.com/recursiveuniverse/recursiveuniverse.github.io/blob/master/lib
 # [life]: http://en.wikipedia.org/wiki/Conway's_Game_of_Life
 # [cs]: http://jashkenas.github.com/coffee-script/
 # [node]: http://nodejs.org
@@ -149,5 +149,5 @@ _.defaults exports, universe
 #
 # The annotated source code was generated directly from the [original source][source] using [Docco][docco].
 #
-# [source]: https://github.com/recursiveuniverse/recursiveuniverse.github.com/blob/master/lib
+# [source]: https://github.com/recursiveuniverse/recursiveuniverse.github.io/blob/master/lib
 # [docco]: http://jashkenas.github.com/docco/

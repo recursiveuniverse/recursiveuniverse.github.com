@@ -1,4 +1,4 @@
-# This module is part of [recursiveuniverse.github.com](http://recursiveuniverse.github.com).
+# This module is part of [recursiveuniverse.github.io](http://recursiveuniverse.github.io).
 #
 # ## Future Module
 #
@@ -724,5 +724,5 @@ exports.mixInto = (life) ->
 #
 # The annotated source code was generated directly from the [original source][source] using [Docco][docco].
 #
-# [source]: https://github.com/recursiveuniverse/recursiveuniverse.github.com/blob/master/lib
+# [source]: https://github.com/recursiveuniverse/recursiveuniverse.github.io/blob/master/lib
 # [docco]: http://jashkenas.github.com/docco/

@@ -1,4 +1,4 @@
-# This module is part of [resursiveuniver.se](http://recursiveuniverse.github.com).
+# This module is part of [resursiveuniver.se](http://recursiveuniverse.github.io).
 #
 # ## Universe Module
 #
@@ -101,5 +101,5 @@ _.defaults exports, {Cell, Square}
 #
 # The annotated source code was generated directly from the [original source][source] using [Docco][docco].
 #
-# [source]: https://github.com/recursiveuniverse/recursiveuniverse.github.com/blob/master/lib
+# [source]: https://github.com/recursiveuniverse/recursiveuniverse.github.io/blob/master/lib
 # [docco]: http://jashkenas.github.com/docco/
