@@ -1,4 +1,4 @@
-# This module is part of [recursiveuniverse.github.io](http://recursiveuniverse.github.io).
+# This module is part of [recursiveuniverse.github.io](https://recursiveuniverse.github.io).
 #
 # ## Canonicalization Module
 #

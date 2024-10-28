@@ -1,4 +1,4 @@
-# This module is part of [resursiveuniver.se](http://recursiveuniverse.github.io).
+# This module is part of [resursiveuniver.se](https://recursiveuniverse.github.io).
 #
 # ## Universe Module
 #
