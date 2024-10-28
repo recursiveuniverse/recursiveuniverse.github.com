@@ -14,9 +14,9 @@ Cafe au Life is an implementation of John Conway's [Game of Life][life] cellular
 
 Cafe au Life implements Bill Gosper's [HashLife][hashlife] algorithm. HashLife exploits regularity, so for certain life patterns, it runs at super-linear speed. As [noted elsewhere][beautiful], if you set up Gosper's Glider Gun when the Earth was first formed 4.5 billion years ago, and ran one generation per second, in the 143.4 *quadrillion* seconds that have elapsed since then, the pattern would grow to 23,900,000,000,000,036 live cells. Cafe au Life takes just under two seconds to boot up, and another second to calculate the state of the pattern after 143.4 quadrillion generations.
 
-If you haven't seen how the algorithm works, read the [annotated source code][source] and learn how the algorithm works.
+If you haven't seen how the algorithm works, read the [annotated source code][annotated] and learn how the algorithm works.
 
-[source]: http://recursiveuniverse.github.io/docs/cafeaulife.html
+[annotated]: http://recursiveuniverse.github.io/docs/cafeaulife.html
 [beautiful]: http://raganwald.posterous.com/a-beautiful-algorithm
 [hashlife]: http://en.wikipedia.org/wiki/Hashlife
 
@@ -56,7 +56,7 @@ if you'd like to read more, the most approachable book on the subject is William
 
 ### What should I read next?
 
-The [annotated source code][source].
+The [annotated source code][annotated].
 
 ### Who's responsible for this?
 
