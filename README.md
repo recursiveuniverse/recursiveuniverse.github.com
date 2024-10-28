@@ -76,5 +76,5 @@ Cafe au Life is freely distributable under the terms of the [MIT license](http:/
 
 The annotated source code was generated directly from the [original source][source] using [Docco][docco].
 
-[source]: https://github.com/recursiveuniverse/recursiveuniverse.github.io/blob/master/lib
+[source]: https://github.com/recursiveuniverse/recursiveuniverse.github.com/blob/master/lib
 [docco]: http://jashkenas.github.com/docco/
